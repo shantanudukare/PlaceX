@@ -1,10 +1,15 @@
 import React from 'react'
+import AppRoutes from './routes/AppRoutes.jsx'
+import { AuthProvider } from './context/AuthContext.jsx'
+import { ToastProvider } from './context/ToastContext.jsx'
 
 const App = () => {
   return (
-    <div>
-      <h1 className='bg-amber-200 '>Testing tailwind setup</h1>
-    </div>
+    <AuthProvider>
+      <ToastProvider>
+        <AppRoutes />
+      </ToastProvider>
+    </AuthProvider>
   )
 }
 

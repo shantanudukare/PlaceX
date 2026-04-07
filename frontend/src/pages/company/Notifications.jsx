@@ -8,7 +8,7 @@ import EmptyState from '../../components/ui/EmptyState.jsx'
 import { formatDate } from '../../utils/format.js'
 import { useToast } from '../../context/ToastContext.jsx'
 
-export default function StudentNotifications() {
+export default function CompanyNotifications() {
   const toast = useToast()
 
   const [notifications, setNotifications] = useState([])
@@ -32,6 +32,7 @@ export default function StudentNotifications() {
         if (mounted) setLoading(false)
       }
     })()
+
     return () => {
       mounted = false
     }
@@ -72,7 +73,7 @@ export default function StudentNotifications() {
             Notifications
           </h2>
           <p className="mt-1 text-sm text-slate-600">
-            Stay updated on job and application changes.
+            Monitor updates about applications and job approvals.
           </p>
         </div>
 
@@ -102,7 +103,7 @@ export default function StudentNotifications() {
       ) : notifications.length === 0 ? (
         <EmptyState
           title="No notifications"
-          description="You will see updates here once notifications are created."
+          description="Notifications will appear here as events happen."
         />
       ) : (
         <Card className="p-0">
@@ -117,9 +118,7 @@ export default function StudentNotifications() {
                     <div className="text-sm font-semibold text-slate-900">
                       {n.title}
                     </div>
-                    {!n.isRead ? (
-                      <Badge variant="info">New</Badge>
-                    ) : null}
+                    {!n.isRead ? <Badge variant="info">New</Badge> : null}
                   </div>
                   <div className="mt-2 text-sm text-slate-700">
                     {n.message}
@@ -150,4 +149,5 @@ export default function StudentNotifications() {
     </div>
   )
 }
+
 
