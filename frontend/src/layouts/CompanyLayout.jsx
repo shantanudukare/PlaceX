@@ -28,66 +28,75 @@ export default function CompanyLayout({ children }) {
   const companyName = profile?.companyName || 'Company'
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <div className="mx-auto grid max-w-7xl grid-cols-12 gap-0 px-4 py-6">
-        <aside className="col-span-12 hidden lg:block lg:col-span-3">
-          <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-            <div className="flex items-start justify-between gap-3">
-              <div>
-                <div className="text-sm font-semibold text-slate-900">
-                  {user?.fullName || companyName}
-                </div>
-                <div className="mt-1 text-xs text-slate-600">
-                  {profile?.industry ? `Industry: ${profile.industry}` : ''}
-                </div>
-              </div>
-              <div className="text-right">
-                <span
-                  className={
-                    user?.approvalStatus === 'Approved'
-                      ? 'inline-flex items-center rounded-full bg-emerald-50 px-2 py-1 text-xs font-medium text-emerald-700'
-                      : 'inline-flex items-center rounded-full bg-amber-50 px-2 py-1 text-xs font-medium text-amber-700'
-                  }
-                >
-                  {user?.approvalStatus || 'Pending'}
-                </span>
-              </div>
-            </div>
+    <div className="min-h-screen bg-slate-100">
 
-            <nav className="mt-5 space-y-1">
-              {navItems.map((item) => (
-                <Link
-                  key={item.to}
-                  to={item.to}
-                  className="block rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
-                >
-                  {item.label}
-                </Link>
-              ))}
-            </nav>
+      {/* 🔥 FULL WIDTH */}
+      <div className="grid grid-cols-12 min-h-screen">
 
-            <button
-              onClick={onLogout}
-              className="mt-5 w-full rounded-lg bg-slate-900 px-3 py-2 text-sm font-medium text-white hover:bg-slate-800"
-            >
-              Logout
-            </button>
-          </div>
-        </aside>
+        {/* Sidebar */}
+<aside className="hidden lg:block lg:w-[300px] fixed top-0 left-0 h-screen p-5">  <div className="h-full rounded-3xl border border-slate-200 bg-white p-6 shadow-md flex flex-col">
 
-        <main className="col-span-12 lg:col-span-9">
-          <div className="flex items-center justify-between lg:hidden">
+    {/* Company Info */}
+    <div className="flex items-start justify-between gap-3">
+      <div>
+        <div className="text-lg font-semibold text-slate-900">
+          {user?.fullName || companyName}
+        </div>
+        <div className="mt-1 text-base text-slate-500">
+          {profile?.industry ? `Industry: ${profile.industry}` : ''}
+        </div>
+      </div>
+
+      <span
+        className={
+          user?.approvalStatus === 'Approved'
+            ? 'inline-flex items-center rounded-full bg-emerald-100 px-3 py-1 text-sm font-medium text-emerald-700'
+            : 'inline-flex items-center rounded-full bg-amber-100 px-3 py-1 text-sm font-medium text-amber-700'
+        }
+      >
+        {user?.approvalStatus || 'Pending'}
+      </span>
+    </div>
+
+    {/* Navigation (scrollable if long) */}
+    <nav className="mt-8 space-y-2 flex-1 overflow-y-auto">
+      {navItems.map((item) => (
+        <Link
+          key={item.to}
+          to={item.to}
+          className="block rounded-xl px-4 py-3 text-base font-medium text-slate-700 hover:bg-slate-100 transition"
+        >
+          {item.label}
+        </Link>
+      ))}
+    </nav>
+
+    {/* Logout always fixed at bottom */}
+    <button
+      onClick={onLogout}
+      className="mt-4 w-full rounded-xl bg-slate-900 px-4 py-3 text-base font-medium text-white hover:bg-slate-800 transition"
+    >
+      Logout
+    </button>
+
+  </div>
+</aside>
+
+        {/* Content */}
+<main className="col-span-12 lg:ml-[300px] p-6 lg:p-8">          {/* Mobile Header */}
+          <div className="flex items-center justify-between lg:hidden mb-4">
             <div className="text-lg font-semibold text-slate-900">
               Company Portal
             </div>
             <button
               onClick={() => setMobileOpen(true)}
-              className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-800 shadow-sm"
+              className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium shadow-sm"
             >
               Menu
             </button>
           </div>
 
+          {/* Mobile Sidebar */}
           <AnimatePresence>
             {mobileOpen && (
               <motion.div
@@ -101,28 +110,29 @@ export default function CompanyLayout({ children }) {
                   initial={{ x: -260 }}
                   animate={{ x: 0 }}
                   exit={{ x: -260 }}
-                  transition={{ duration: 0.2 }}
-                  className="h-full w-[260px] bg-white p-4 shadow-lg"
+                  className="h-full w-[260px] bg-white p-4 shadow-lg flex flex-col"
                   onClick={(e) => e.stopPropagation()}
                 >
-                  <div className="text-sm font-semibold text-slate-900">
+                  <div className="text-base font-semibold text-slate-900">
                     {companyName}
                   </div>
-                  <nav className="mt-4 space-y-1">
+
+                  <nav className="mt-4 space-y-2 flex-1">
                     {navItems.map((item) => (
                       <Link
                         key={item.to}
                         to={item.to}
                         onClick={() => setMobileOpen(false)}
-                        className="block rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+                        className="block rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
                       >
                         {item.label}
                       </Link>
                     ))}
                   </nav>
+
                   <button
                     onClick={onLogout}
-                    className="mt-5 w-full rounded-lg bg-slate-900 px-3 py-2 text-sm font-medium text-white hover:bg-slate-800"
+                    className="mt-4 w-full rounded-lg bg-slate-900 px-3 py-2 text-white"
                   >
                     Logout
                   </button>
@@ -131,10 +141,11 @@ export default function CompanyLayout({ children }) {
             )}
           </AnimatePresence>
 
-          <div className="mt-5">{children}</div>
+          {/* Page Content */}
+          <div className="mt-2">{children}</div>
         </main>
+
       </div>
     </div>
   )
 }
-

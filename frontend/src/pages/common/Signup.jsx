@@ -1,5 +1,10 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import {
+  GraduationCap,
+  Building2,
+  Plus,
+} from 'lucide-react'
 
 import Button from '../../components/ui/Button.jsx'
 import Input from '../../components/ui/Input.jsx'
@@ -20,7 +25,7 @@ export default function Signup() {
   const { signupStudent, signupCompany, loading } = useAuth()
   const toast = useToast()
 
-  const [accountType, setAccountType] = useState('student') // 'student' | 'company'
+  const [accountType, setAccountType] = useState('student')
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
 
@@ -64,12 +69,14 @@ export default function Signup() {
         setError('Full name, email, and password are required')
         return
       }
+
       if (!sBranch.trim() || sCgpa === '') {
         setError('Branch and CGPA are required')
         return
       }
 
       const cgpaNum = Number(sCgpa)
+
       if (Number.isNaN(cgpaNum) || cgpaNum < 0 || cgpaNum > 10) {
         setError('CGPA must be a number between 0 and 10')
         return
@@ -93,30 +100,58 @@ export default function Signup() {
             githubLink: p.githubLink.trim(),
             liveLink: p.liveLink.trim(),
           }))
-          .filter((p) => p.title || p.description || p.githubLink || p.liveLink),
+          .filter(
+            (p) =>
+              p.title ||
+              p.description ||
+              p.githubLink ||
+              p.liveLink
+          ),
       }
 
       setSubmitting(true)
+
       try {
         const res = await signupStudent(payload)
+
         toast.pushToast({
           type: 'success',
           message: 'Student account created successfully',
         })
+
         const role = res?.user?.role || 'student'
-        navigate(role === 'admin' ? '/admin/dashboard' : '/student/dashboard', { replace: true })
+
+        navigate(
+          role === 'admin'
+            ? '/admin/dashboard'
+            : '/student/dashboard',
+          { replace: true }
+        )
       } catch (err) {
         setError(err?.message || 'Signup failed')
-        toast.pushToast({ type: 'error', message: err?.message || 'Signup failed' })
+
+        toast.pushToast({
+          type: 'error',
+          message: err?.message || 'Signup failed',
+        })
       } finally {
         setSubmitting(false)
       }
+
       return
     }
 
     // company
-    if (!cFullName.trim() || !cEmail.trim() || !cPassword || !cCompanyName.trim()) {
-      setError('Full name, email, password, and company name are required')
+
+    if (
+      !cFullName.trim() ||
+      !cEmail.trim() ||
+      !cPassword ||
+      !cCompanyName.trim()
+    ) {
+      setError(
+        'Full name, email, password, and company name are required'
+      )
       return
     }
 
@@ -135,399 +170,554 @@ export default function Signup() {
     }
 
     setSubmitting(true)
+
     try {
-      const res = await signupCompany(payload)
+      await signupCompany(payload)
+
       toast.pushToast({
         type: 'success',
         message: 'Company account created successfully',
       })
-      navigate('/company/dashboard', { replace: true })
+
+      navigate('/company/dashboard', {
+        replace: true,
+      })
     } catch (err) {
       setError(err?.message || 'Signup failed')
-      toast.pushToast({ type: 'error', message: err?.message || 'Signup failed' })
+
+      toast.pushToast({
+        type: 'error',
+        message: err?.message || 'Signup failed',
+      })
     } finally {
       setSubmitting(false)
     }
   }
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-10">
-      <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-        <div className="flex items-center justify-between gap-4">
+    <div className="min-h-screen bg-slate-100">
+      <div className="grid min-h-screen lg:grid-cols-[430px_1fr]">
+        
+        
+       {/* LEFT SIDE */}
+<div className="relative hidden lg:block">
+  <div className="sticky top-0 flex h-screen overflow-hidden bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 p-10 text-white">
+    
+    <div className="absolute -top-16 -left-10 h-72 w-72 rounded-full bg-cyan-500/20 blur-3xl" />
+    <div className="absolute bottom-0 right-0 h-72 w-72 rounded-full bg-blue-500/20 blur-3xl" />
+
+    <div className="relative z-10 flex h-full flex-col justify-between">
+      
+      <div>
+        <div className="flex items-center gap-4">
+          <div className="flex h-16 w-16 items-center justify-center rounded-3xl border border-white/20 bg-white/10 backdrop-blur">
+            <GraduationCap size={32} />
+          </div>
+
           <div>
-            <h1 className="text-2xl font-semibold text-slate-900">
-              Signup
+            <h1 className="text-3xl font-bold">
+              Student Portal
             </h1>
-            <p className="mt-1 text-sm text-slate-600">
-              Create your {accountType === 'student' ? 'student' : 'company'} account.
+
+            <p className="text-sm text-slate-300">
+              Placement & Career Platform
             </p>
           </div>
-          {loading ? <Spinner /> : null}
         </div>
 
-        <div className="mt-5 flex gap-2 rounded-xl border border-slate-200 bg-slate-50 p-1">
-          <button
-            type="button"
-            onClick={() => setAccountType('student')}
-            className={[
-              'flex-1 rounded-lg px-3 py-2 text-sm font-medium',
-              accountType === 'student'
-                ? 'bg-white text-slate-900 shadow-sm'
-                : 'text-slate-600 hover:text-slate-900',
-            ].join(' ')}
-          >
-            Student
-          </button>
-          <button
-            type="button"
-            onClick={() => setAccountType('company')}
-            className={[
-              'flex-1 rounded-lg px-3 py-2 text-sm font-medium',
-              accountType === 'company'
-                ? 'bg-white text-slate-900 shadow-sm'
-                : 'text-slate-600 hover:text-slate-900',
-            ].join(' ')}
-          >
-            Company
-          </button>
+        <div className="mt-16">
+          <h2 className="text-5xl font-bold leading-tight">
+            Build Your
+            <br />
+            Career Journey.
+          </h2>
+
+          <p className="mt-6 text-lg leading-8 text-slate-300">
+            Register yourself to connect with recruiters,
+            explore opportunities and manage your academic profile.
+          </p>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-4">
+        <div className="rounded-3xl border border-white/10 bg-white/10 p-5 backdrop-blur-xl">
+          <h3 className="text-3xl font-bold">500+</h3>
+          <p className="mt-2 text-sm text-slate-300">
+            Students
+          </p>
         </div>
 
-        <form className="mt-6 space-y-4" onSubmit={onSubmit}>
-          {/* Student */}
-          {accountType === 'student' ? (
-            <>
-              <div className="grid gap-4 md:grid-cols-2">
-                <Input
-                  label="Full name"
-                  id="sFullName"
-                  value={sFullName}
-                  onChange={(e) => setSFullName(e.target.value)}
-                  placeholder="Your name"
-                  autoComplete="name"
-                  required
-                />
-                <Input
-                  label="Email"
-                  id="sEmail"
-                  type="email"
-                  value={sEmail}
-                  onChange={(e) => setSEmail(e.target.value)}
-                  placeholder="name@example.com"
-                  autoComplete="email"
-                  required
-                />
-              </div>
+        <div className="rounded-3xl border border-white/10 bg-white/10 p-5 backdrop-blur-xl">
+          <h3 className="text-3xl font-bold">150+</h3>
+          <p className="mt-2 text-sm text-slate-300">
+            Companies
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-              <div className="grid gap-4 md:grid-cols-2">
-                <Input
-                  label="Password"
-                  id="sPassword"
-                  type="password"
-                  value={sPassword}
-                  onChange={(e) => setSPassword(e.target.value)}
-                  placeholder="Minimum 6 characters"
-                  autoComplete="new-password"
-                  required
-                />
-                <Input
-                  label="Phone (optional)"
-                  id="sPhone"
-                  value={sPhone}
-                  onChange={(e) => setSPhone(e.target.value)}
-                  placeholder="Phone number"
-                  autoComplete="tel"
-                />
-              </div>
+        {/* RIGHT SIDE */}
+        <div className="flex items-center justify-center px-4 py-10">
+          <div className="w-full max-w-5xl rounded-[36px] border border-slate-200 bg-white p-8 shadow-2xl shadow-slate-300/40 lg:p-10">
 
-              <div className="grid gap-4 md:grid-cols-2">
-                <Input
-                  label="Branch"
-                  id="sBranch"
-                  value={sBranch}
-                  onChange={(e) => setSBranch(e.target.value)}
-                  placeholder="e.g. Computer Science"
-                  required
-                />
-                <Input
-                  label="CGPA"
-                  id="sCgpa"
-                  value={sCgpa}
-                  onChange={(e) => setSCgpa(e.target.value)}
-                  placeholder="0 - 10"
-                  required
-                />
-              </div>
-
-              <Input
-                label="Skills (comma-separated, optional)"
-                id="sSkills"
-                value={sSkills}
-                onChange={(e) => setSSkills(e.target.value)}
-                placeholder="React, Node, MongoDB"
-              />
-
-              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                <div className="flex items-center justify-between gap-3">
-                  <div className="text-sm font-semibold text-slate-900">
-                    Projects (optional)
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setProjects((prev) => [
-                        ...prev,
-                        {
-                          title: '',
-                          description: '',
-                          techStack: '',
-                          githubLink: '',
-                          liveLink: '',
-                        },
-                      ])
-                    }
-                    className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
-                  >
-                    Add Project
-                  </button>
+            {/* HEADER */}
+            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+              <div>
+                <div className="inline-flex items-center gap-2 rounded-full bg-blue-50 px-4 py-1 text-sm font-medium text-blue-700">
+                  Secure Registration
                 </div>
 
-                <div className="mt-4 space-y-4">
-                  {projects.map((p, idx) => (
-                    <div
-                      key={idx}
-                      className="rounded-2xl border border-slate-200 bg-white p-4"
-                    >
-                      <div className="flex items-start justify-between gap-3">
-                        <div className="text-sm font-semibold text-slate-900">
-                          Project #{idx + 1}
-                        </div>
-                        {projects.length > 1 ? (
-                          <button
-                            type="button"
-                            onClick={() =>
-                              setProjects((prev) =>
-                                prev.filter((_, i) => i !== idx)
-                              )
-                            }
-                            className="rounded-lg px-2 py-1 text-sm text-rose-700 hover:bg-rose-50"
-                          >
-                            Remove
-                          </button>
-                        ) : null}
-                      </div>
+                <h1 className="mt-4 text-4xl font-bold text-slate-900">
+                  Create Account
+                </h1>
 
-                      <div className="mt-3 grid gap-4 md:grid-cols-2">
-                        <Input
-                          label="Title"
-                          id={`proj-title-${idx}`}
-                          value={p.title}
-                          onChange={(e) => {
-                            const v = e.target.value
-                            setProjects((prev) =>
-                              prev.map((x, i) =>
-                                i === idx ? { ...x, title: v } : x
-                              )
-                            )
-                          }}
-                          placeholder="Project title"
-                        />
-                        <Input
-                          label="Tech Stack (comma)"
-                          id={`proj-tech-${idx}`}
-                          value={p.techStack}
-                          onChange={(e) => {
-                            const v = e.target.value
-                            setProjects((prev) =>
-                              prev.map((x, i) =>
-                                i === idx ? { ...x, techStack: v } : x
-                              )
-                            )
-                          }}
-                          placeholder="React, Express"
-                        />
-                      </div>
-
-                      <Textarea
-                        label="Description"
-                        id={`proj-desc-${idx}`}
-                        value={p.description}
-                        onChange={(e) => {
-                          const v = e.target.value
-                          setProjects((prev) =>
-                            prev.map((x, i) =>
-                              i === idx
-                                ? { ...x, description: v }
-                                : x
-                            )
-                          )
-                        }}
-                        placeholder="What did you build?"
-                      />
-
-                      <div className="mt-2 grid gap-4 md:grid-cols-2">
-                        <Input
-                          label="GitHub link (optional)"
-                          id={`proj-github-${idx}`}
-                          value={p.githubLink}
-                          onChange={(e) => {
-                            const v = e.target.value
-                            setProjects((prev) =>
-                              prev.map((x, i) =>
-                                i === idx ? { ...x, githubLink: v } : x
-                              )
-                            )
-                          }}
-                          placeholder="https://github.com/... "
-                        />
-                        <Input
-                          label="Live link (optional)"
-                          id={`proj-live-${idx}`}
-                          value={p.liveLink}
-                          onChange={(e) => {
-                            const v = e.target.value
-                            setProjects((prev) =>
-                              prev.map((x, i) =>
-                                i === idx ? { ...x, liveLink: v } : x
-                              )
-                            )
-                          }}
-                          placeholder="https://yourapp.com"
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </>
-          ) : (
-            // Company
-            <>
-              <div className="grid gap-4 md:grid-cols-2">
-                <Input
-                  label="Full name"
-                  id="cFullName"
-                  value={cFullName}
-                  onChange={(e) => setCFullName(e.target.value)}
-                  placeholder="Authorized person name"
-                  autoComplete="name"
-                  required
-                />
-                <Input
-                  label="Email"
-                  id="cEmail"
-                  type="email"
-                  value={cEmail}
-                  onChange={(e) => setCEmail(e.target.value)}
-                  placeholder="name@example.com"
-                  autoComplete="email"
-                  required
-                />
+                <p className="mt-2 text-slate-500">
+                  Register as student or company
+                </p>
               </div>
 
-              <div className="grid gap-4 md:grid-cols-2">
-                <Input
-                  label="Password"
-                  id="cPassword"
-                  type="password"
-                  value={cPassword}
-                  onChange={(e) => setCPassword(e.target.value)}
-                  placeholder="Minimum 6 characters"
-                  autoComplete="new-password"
-                  required
-                />
-                <Input
-                  label="Company name"
-                  id="cCompanyName"
-                  value={cCompanyName}
-                  onChange={(e) => setCCompanyName(e.target.value)}
-                  placeholder="e.g. Google"
-                  required
-                />
-              </div>
+              {loading ? <Spinner /> : null}
+            </div>
 
-              <Input
-                label="Website (optional)"
-                id="cWebsite"
-                value={cWebsite}
-                onChange={(e) => setCWebsite(e.target.value)}
-                placeholder="https://company.com"
-              />
+            {/* TOGGLE */}
+            <div className="mt-8 flex rounded-2xl bg-slate-100 p-1">
+              <button
+                type="button"
+                onClick={() => setAccountType('student')}
+                className={`flex flex-1 items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold transition-all ${
+                  accountType === 'student'
+                    ? 'bg-gradient-to-r from-blue-600 to-cyan-500 text-white shadow-lg'
+                    : 'text-slate-600'
+                }`}
+              >
+                <GraduationCap size={18} />
+                Student
+              </button>
 
-              <Textarea
-                label="Description (optional)"
-                id="cDescription"
-                value={cDescription}
-                onChange={(e) => setCDescription(e.target.value)}
-                placeholder="Short overview"
-              />
+              <button
+                type="button"
+                onClick={() => setAccountType('company')}
+                className={`flex flex-1 items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold transition-all ${
+                  accountType === 'company'
+                    ? 'bg-gradient-to-r from-blue-600 to-cyan-500 text-white shadow-lg'
+                    : 'text-slate-600'
+                }`}
+              >
+                <Building2 size={18} />
+                Company
+              </button>
+            </div>
 
-              <div className="grid gap-4 md:grid-cols-2">
-                <Input
-                  label="Industry (optional)"
-                  id="cIndustry"
-                  value={cIndustry}
-                  onChange={(e) => setCIndustry(e.target.value)}
-                  placeholder="IT Services"
-                />
-                <Input
-                  label="Location (optional)"
-                  id="cLocation"
-                  value={cLocation}
-                  onChange={(e) => setCLocation(e.target.value)}
-                  placeholder="City, Country"
-                />
-              </div>
-
-              <div className="grid gap-4 md:grid-cols-2">
-                <Input
-                  label="HR Name (optional)"
-                  id="cHrName"
-                  value={cHrName}
-                  onChange={(e) => setCHrName(e.target.value)}
-                />
-                <Input
-                  label="HR Email (optional)"
-                  id="cHrEmail"
-                  type="email"
-                  value={cHrEmail}
-                  onChange={(e) => setCHrEmail(e.target.value)}
-                />
-              </div>
-
-              <Input
-                label="HR Phone (optional)"
-                id="cHrPhone"
-                value={cHrPhone}
-                onChange={(e) => setCHrPhone(e.target.value)}
-                placeholder="Phone number"
-                autoComplete="tel"
-              />
-            </>
-          )}
-
-          {error ? <div className="text-sm text-rose-600">{error}</div> : null}
-
-          <Button
-            type="submit"
-            loading={submitting}
-            disabled={submitting}
-            className="w-full"
-          >
-            Create Account
-          </Button>
-
-          <div className="text-center text-sm text-slate-600">
-            Already have an account?{' '}
-            <Link
-              to="/auth/login"
-              className="font-medium text-slate-900 underline"
+            {/* FORM */}
+            <form
+              className="mt-8 space-y-6"
+              onSubmit={onSubmit}
             >
-              Login
-            </Link>
+              {accountType === 'student' ? (
+                <>
+                  <div className="grid gap-5 md:grid-cols-2">
+                    <Input
+                      label="Full Name"
+                      id="sFullName"
+                      value={sFullName}
+                      onChange={(e) =>
+                        setSFullName(e.target.value)
+                      }
+                      placeholder="Your name"
+                      required
+                    />
+
+                    <Input
+                      label="Email"
+                      id="sEmail"
+                      type="email"
+                      value={sEmail}
+                      onChange={(e) =>
+                        setSEmail(e.target.value)
+                      }
+                      placeholder="name@example.com"
+                      required
+                    />
+                  </div>
+
+                  <div className="grid gap-5 md:grid-cols-2">
+                    <Input
+                      label="Password"
+                      id="sPassword"
+                      type="password"
+                      value={sPassword}
+                      onChange={(e) =>
+                        setSPassword(e.target.value)
+                      }
+                      placeholder="Minimum 6 characters"
+                      required
+                    />
+
+                    <Input
+                      label="Phone"
+                      id="sPhone"
+                      value={sPhone}
+                      onChange={(e) =>
+                        setSPhone(e.target.value)
+                      }
+                      placeholder="Phone number"
+                    />
+                  </div>
+
+                  <div className="grid gap-5 md:grid-cols-2">
+                    <Input
+                      label="Branch"
+                      id="sBranch"
+                      value={sBranch}
+                      onChange={(e) =>
+                        setSBranch(e.target.value)
+                      }
+                      placeholder="Computer Science"
+                      required
+                    />
+
+                    <Input
+                      label="CGPA"
+                      id="sCgpa"
+                      value={sCgpa}
+                      onChange={(e) =>
+                        setSCgpa(e.target.value)
+                      }
+                      placeholder="0 - 10"
+                      required
+                    />
+                  </div>
+
+                  <Input
+                    label="Skills"
+                    id="sSkills"
+                    value={sSkills}
+                    onChange={(e) =>
+                      setSSkills(e.target.value)
+                    }
+                    placeholder="React, Node.js, MongoDB"
+                  />
+
+                  {/* PROJECTS */}
+                  <div className="rounded-3xl border border-slate-200 bg-slate-50 p-5">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-lg font-semibold text-slate-900">
+                        Projects
+                      </h3>
+
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setProjects((prev) => [
+                            ...prev,
+                            {
+                              title: '',
+                              description: '',
+                              techStack: '',
+                              githubLink: '',
+                              liveLink: '',
+                            },
+                          ])
+                        }
+                        className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 px-4 py-2 text-sm font-medium text-white"
+                      >
+                        <Plus size={16} />
+                        Add Project
+                      </button>
+                    </div>
+
+                    <div className="mt-5 space-y-5">
+                      {projects.map((p, idx) => (
+                        <div
+                          key={idx}
+                          className="rounded-2xl border border-slate-200 bg-white p-5"
+                        >
+                          <div className="flex items-center justify-between">
+                            <h4 className="font-semibold text-slate-900">
+                              Project #{idx + 1}
+                            </h4>
+
+                            {projects.length > 1 && (
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  setProjects((prev) =>
+                                    prev.filter(
+                                      (_, i) => i !== idx
+                                    )
+                                  )
+                                }
+                                className="text-sm font-medium text-red-500"
+                              >
+                                Remove
+                              </button>
+                            )}
+                          </div>
+
+                          <div className="mt-4 grid gap-5 md:grid-cols-2">
+                            <Input
+                              label="Title"
+                              id={`proj-title-${idx}`}
+                              value={p.title}
+                              onChange={(e) => {
+                                const v = e.target.value
+                                setProjects((prev) =>
+                                  prev.map((x, i) =>
+                                    i === idx
+                                      ? { ...x, title: v }
+                                      : x
+                                  )
+                                )
+                              }}
+                              placeholder="Project title"
+                            />
+
+                            <Input
+                              label="Tech Stack"
+                              id={`proj-tech-${idx}`}
+                              value={p.techStack}
+                              onChange={(e) => {
+                                const v = e.target.value
+                                setProjects((prev) =>
+                                  prev.map((x, i) =>
+                                    i === idx
+                                      ? {
+                                          ...x,
+                                          techStack: v,
+                                        }
+                                      : x
+                                  )
+                                )
+                              }}
+                              placeholder="React, Express"
+                            />
+                          </div>
+
+                          <div className="mt-5">
+                            <Textarea
+                              label="Description"
+                              id={`proj-desc-${idx}`}
+                              value={p.description}
+                              onChange={(e) => {
+                                const v = e.target.value
+                                setProjects((prev) =>
+                                  prev.map((x, i) =>
+                                    i === idx
+                                      ? {
+                                          ...x,
+                                          description: v,
+                                        }
+                                      : x
+                                  )
+                                )
+                              }}
+                              placeholder="Describe your project"
+                            />
+                          </div>
+
+                          <div className="mt-5 grid gap-5 md:grid-cols-2">
+                            <Input
+                              label="GitHub Link"
+                              id={`proj-github-${idx}`}
+                              value={p.githubLink}
+                              onChange={(e) => {
+                                const v = e.target.value
+                                setProjects((prev) =>
+                                  prev.map((x, i) =>
+                                    i === idx
+                                      ? {
+                                          ...x,
+                                          githubLink: v,
+                                        }
+                                      : x
+                                  )
+                                )
+                              }}
+                              placeholder="https://github.com/"
+                            />
+
+                            <Input
+                              label="Live Link"
+                              id={`proj-live-${idx}`}
+                              value={p.liveLink}
+                              onChange={(e) => {
+                                const v = e.target.value
+                                setProjects((prev) =>
+                                  prev.map((x, i) =>
+                                    i === idx
+                                      ? {
+                                          ...x,
+                                          liveLink: v,
+                                        }
+                                      : x
+                                  )
+                                )
+                              }}
+                              placeholder="https://yourapp.com"
+                            />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="grid gap-5 md:grid-cols-2">
+                    <Input
+                      label="Full Name"
+                      id="cFullName"
+                      value={cFullName}
+                      onChange={(e) =>
+                        setCFullName(e.target.value)
+                      }
+                      placeholder="Authorized person"
+                      required
+                    />
+
+                    <Input
+                      label="Email"
+                      id="cEmail"
+                      type="email"
+                      value={cEmail}
+                      onChange={(e) =>
+                        setCEmail(e.target.value)
+                      }
+                      placeholder="name@example.com"
+                      required
+                    />
+                  </div>
+
+                  <div className="grid gap-5 md:grid-cols-2">
+                    <Input
+                      label="Password"
+                      id="cPassword"
+                      type="password"
+                      value={cPassword}
+                      onChange={(e) =>
+                        setCPassword(e.target.value)
+                      }
+                      placeholder="Minimum 6 characters"
+                      required
+                    />
+
+                    <Input
+                      label="Company Name"
+                      id="cCompanyName"
+                      value={cCompanyName}
+                      onChange={(e) =>
+                        setCCompanyName(e.target.value)
+                      }
+                      placeholder="Google"
+                      required
+                    />
+                  </div>
+
+                  <Input
+                    label="Website"
+                    id="cWebsite"
+                    value={cWebsite}
+                    onChange={(e) =>
+                      setCWebsite(e.target.value)
+                    }
+                    placeholder="https://company.com"
+                  />
+
+                  <Textarea
+                    label="Description"
+                    id="cDescription"
+                    value={cDescription}
+                    onChange={(e) =>
+                      setCDescription(e.target.value)
+                    }
+                    placeholder="Company overview"
+                  />
+
+                  <div className="grid gap-5 md:grid-cols-2">
+                    <Input
+                      label="Industry"
+                      id="cIndustry"
+                      value={cIndustry}
+                      onChange={(e) =>
+                        setCIndustry(e.target.value)
+                      }
+                      placeholder="IT Services"
+                    />
+
+                    <Input
+                      label="Location"
+                      id="cLocation"
+                      value={cLocation}
+                      onChange={(e) =>
+                        setCLocation(e.target.value)
+                      }
+                      placeholder="City, Country"
+                    />
+                  </div>
+
+                  <div className="grid gap-5 md:grid-cols-2">
+                    <Input
+                      label="HR Name"
+                      id="cHrName"
+                      value={cHrName}
+                      onChange={(e) =>
+                        setCHrName(e.target.value)
+                      }
+                    />
+
+                    <Input
+                      label="HR Email"
+                      id="cHrEmail"
+                      type="email"
+                      value={cHrEmail}
+                      onChange={(e) =>
+                        setCHrEmail(e.target.value)
+                      }
+                    />
+                  </div>
+
+                  <Input
+                    label="HR Phone"
+                    id="cHrPhone"
+                    value={cHrPhone}
+                    onChange={(e) =>
+                      setCHrPhone(e.target.value)
+                    }
+                    placeholder="Phone number"
+                  />
+                </>
+              )}
+
+              {error ? (
+                <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
+                  {error}
+                </div>
+              ) : null}
+
+              <Button
+                type="submit"
+                loading={submitting}
+                disabled={submitting}
+                className="h-14 w-full rounded-2xl bg-gradient-to-r from-blue-600 to-cyan-500 text-base font-semibold text-white shadow-lg hover:from-blue-700 hover:to-cyan-600"
+              >
+                Create Account
+              </Button>
+
+              <div className="text-center text-sm text-slate-500">
+                Already have an account?{' '}
+                <Link
+                  to="/auth/login"
+                  className="font-semibold text-blue-700 hover:underline"
+                >
+                  Login
+                </Link>
+              </div>
+            </form>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   )
 }
-

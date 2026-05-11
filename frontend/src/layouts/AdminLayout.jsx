@@ -27,49 +27,65 @@ export default function AdminLayout({ children }) {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <div className="mx-auto grid max-w-7xl grid-cols-12 gap-0 px-4 py-6">
-        <aside className="col-span-12 hidden lg:block lg:col-span-3">
-          <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-            <div className="text-sm font-semibold text-slate-900">
-              {user?.fullName || 'Admin'}
-            </div>
-            <div className="mt-1 text-xs text-slate-600">College Admin</div>
+    <div className="min-h-screen bg-slate-100">
+      
+      {/* 🔥 FULL WIDTH GRID */}
+      <div className="grid grid-cols-12 min-h-screen">
 
-            <nav className="mt-5 space-y-1">
-              {navItems.map((item) => (
-                <Link
-                  key={item.to}
-                  to={item.to}
-                  className="block rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
-                >
-                  {item.label}
-                </Link>
-              ))}
-            </nav>
+        {/* Sidebar */}
+       <aside className="col-span-12 hidden lg:block lg:col-span-3 p-5">
+ <div className="h-full rounded-3xl border border-slate-200 bg-white p-5 shadow-md flex flex-col">
 
-            <button
-              onClick={onLogout}
-              className="mt-5 w-full rounded-lg bg-slate-900 px-3 py-2 text-sm font-medium text-white hover:bg-slate-800"
-            >
-              Logout
-            </button>
-          </div>
-        </aside>
+  {/* Admin Info */}
+  <div>
+    <div className="text-lg font-semibold text-slate-900">
+      {user?.fullName || 'Admin'}
+    </div>
+    <div className="mt-1 text-base text-slate-500">
+      College Admin
+    </div>
+  </div>
 
-        <main className="col-span-12 lg:col-span-9">
-          <div className="flex items-center justify-between lg:hidden">
+  {/* Navigation */}
+  <nav className="mt-8 space-y-2 flex-1">
+    {navItems.map((item) => (
+      <Link
+        key={item.to}
+        to={item.to}
+        className="block rounded-xl px-4 py-3 text-base font-medium text-slate-700 hover:bg-slate-100 transition"
+      >
+        {item.label}
+      </Link>
+    ))}
+  </nav>
+
+  {/* Logout */}
+  <button
+    onClick={onLogout}
+    className="mt-4 w-full rounded-xl bg-slate-900 px-4 py-3 text-base font-medium text-white hover:bg-slate-800 transition"
+  >
+    Logout
+  </button>
+
+</div>
+</aside>
+        {/* Content */}
+        <main className="col-span-12 lg:col-span-9 p-6 lg:p-8">
+
+          {/* Mobile Header */}
+          <div className="flex items-center justify-between lg:hidden mb-4">
             <div className="text-lg font-semibold text-slate-900">
               Admin Portal
             </div>
             <button
               onClick={() => setMobileOpen(true)}
-              className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-800 shadow-sm"
+              className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium shadow-sm"
             >
               Menu
             </button>
           </div>
 
+          {/* Mobile Sidebar */}
           <AnimatePresence>
             {mobileOpen && (
               <motion.div
@@ -90,21 +106,23 @@ export default function AdminLayout({ children }) {
                   <div className="text-sm font-semibold text-slate-900">
                     {user?.fullName || 'Admin'}
                   </div>
+
                   <nav className="mt-4 space-y-1">
                     {navItems.map((item) => (
                       <Link
                         key={item.to}
                         to={item.to}
                         onClick={() => setMobileOpen(false)}
-                        className="block rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+                        className="block rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
                       >
                         {item.label}
                       </Link>
                     ))}
                   </nav>
+
                   <button
                     onClick={onLogout}
-                    className="mt-5 w-full rounded-lg bg-slate-900 px-3 py-2 text-sm font-medium text-white hover:bg-slate-800"
+                    className="mt-5 w-full rounded-lg bg-slate-900 px-3 py-2 text-white"
                   >
                     Logout
                   </button>
@@ -113,10 +131,10 @@ export default function AdminLayout({ children }) {
             )}
           </AnimatePresence>
 
-          <div className="mt-5">{children}</div>
+          {/* Page Content */}
+          <div className="mt-2">{children}</div>
         </main>
       </div>
     </div>
   )
 }
-

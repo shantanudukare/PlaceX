@@ -72,38 +72,85 @@ export default function StudentJobs() {
     })
   }, [jobs, roleQuery, companyQuery, mode, minCtc, maxCtc])
 
-  return (
-    <div className="space-y-4">
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <h2 className="text-2xl font-semibold text-slate-900">
-            Jobs Listing
-          </h2>
-          <p className="mt-1 text-sm text-slate-600">
-            Showing jobs you are eligible for.
-          </p>
-        </div>
-        <div className="text-sm text-slate-600">
-          {jobs.length} eligible job(s)
+ return (
+  <div className="relative">
+    
+    {/* Background Blur */}
+    <div className="pointer-events-none absolute inset-0 overflow-hidden">
+      <div className="absolute -top-10 left-0 h-72 w-72 rounded-full bg-blue-500/10 blur-3xl" />
+      <div className="absolute bottom-0 right-0 h-72 w-72 rounded-full bg-cyan-500/10 blur-3xl" />
+    </div>
+
+    <div className="relative z-10 space-y-8">
+
+      {/* HEADER */}
+      <div className="overflow-hidden rounded-[34px] bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 p-8 text-white shadow-2xl">
+        
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+          
+          <div>
+            <div className="inline-flex items-center gap-2 rounded-full border border-cyan-400/20 bg-cyan-400/10 px-4 py-2 text-sm font-medium text-cyan-200 backdrop-blur">
+              Eligible Opportunities
+            </div>
+
+            <h1 className="mt-5 text-4xl font-bold">
+              Jobs
+              <span className="bg-gradient-to-r from-cyan-300 to-blue-400 bg-clip-text text-transparent">
+                {' '}
+                Listing
+              </span>
+            </h1>
+
+            <p className="mt-3 max-w-2xl text-base leading-7 text-slate-300">
+              Browse jobs that match your eligibility,
+              skills and academic profile.
+            </p>
+          </div>
+
+          <div className="rounded-3xl border border-white/10 bg-white/10 px-6 py-5 backdrop-blur-xl">
+            <div className="text-sm text-slate-300">
+              Eligible Jobs
+            </div>
+
+            <div className="mt-2 text-4xl font-bold">
+              {jobs.length}
+            </div>
+          </div>
         </div>
       </div>
 
-      <Card className="p-5">
-        <div className="grid gap-4 md:grid-cols-5">
-          <div className="md:col-span-2">
+      {/* FILTERS */}
+      <div className="rounded-[30px] border border-white/40 bg-white/70 p-6 shadow-xl backdrop-blur-xl">
+        
+        <div className="mb-6">
+          <h2 className="text-2xl font-bold text-slate-900">
+            Filters
+          </h2>
+
+          <p className="mt-2 text-sm text-slate-500">
+            Search and filter opportunities
+          </p>
+        </div>
+
+        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-5">
+          
+          <div className="xl:col-span-2">
             <input
               value={roleQuery}
               onChange={(e) => setRoleQuery(e.target.value)}
               placeholder="Search by role"
-              className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-100"
+              className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm shadow-sm transition focus:border-blue-300 focus:outline-none focus:ring-4 focus:ring-blue-100"
             />
           </div>
-          <div className="md:col-span-2">
+
+          <div className="xl:col-span-2">
             <input
               value={companyQuery}
-              onChange={(e) => setCompanyQuery(e.target.value)}
+              onChange={(e) =>
+                setCompanyQuery(e.target.value)
+              }
               placeholder="Search by company"
-              className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-100"
+              className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm shadow-sm transition focus:border-blue-300 focus:outline-none focus:ring-4 focus:ring-blue-100"
             />
           </div>
 
@@ -111,7 +158,7 @@ export default function StudentJobs() {
             <select
               value={mode}
               onChange={(e) => setMode(e.target.value)}
-              className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-100"
+              className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm shadow-sm transition focus:border-blue-300 focus:outline-none focus:ring-4 focus:ring-blue-100"
             >
               <option value="All">Mode: All</option>
               <option value="Remote">Remote</option>
@@ -125,22 +172,22 @@ export default function StudentJobs() {
               value={minCtc}
               onChange={(e) => setMinCtc(e.target.value)}
               placeholder="Min CTC"
-              className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-100"
+              className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm shadow-sm transition focus:border-blue-300 focus:outline-none focus:ring-4 focus:ring-blue-100"
             />
           </div>
+
           <div>
             <input
               value={maxCtc}
               onChange={(e) => setMaxCtc(e.target.value)}
               placeholder="Max CTC"
-              className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-100"
+              className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm shadow-sm transition focus:border-blue-300 focus:outline-none focus:ring-4 focus:ring-blue-100"
             />
           </div>
 
-          <div className="md:col-span-2 flex items-center justify-end">
+          <div className="flex items-center justify-end xl:col-span-2">
             <Button
               type="button"
-              variant="secondary"
               onClick={() => {
                 setRoleQuery('')
                 setCompanyQuery('')
@@ -148,87 +195,139 @@ export default function StudentJobs() {
                 setMinCtc('')
                 setMaxCtc('')
               }}
+              className="rounded-2xl bg-gradient-to-r from-blue-600 to-cyan-500 px-5 py-3 text-white shadow-lg hover:from-blue-700 hover:to-cyan-600"
             >
               Clear Filters
             </Button>
           </div>
         </div>
-      </Card>
+      </div>
 
+      {/* CONTENT */}
       {loading ? (
-        <div className="mt-10 flex justify-center">
-          <Spinner size={24} />
+        <div className="flex justify-center pt-10">
+          <div className="flex h-20 w-20 items-center justify-center rounded-full bg-white shadow-xl">
+            <Spinner size={28} />
+          </div>
         </div>
       ) : error ? (
-        <Card className="p-5">
-          <div className="text-sm font-medium text-rose-700">{error}</div>
-        </Card>
-      ) : filteredJobs.length === 0 ? (
-        <EmptyState
-          title="No jobs match your filters"
-          description="Try clearing filters or checking other roles."
-          action={
-            <Button variant="secondary" onClick={() => setRoleQuery('')}>
-              Reset
-            </Button>
-          }
-        />
-      ) : (
-        <Card className="p-0">
-          <div className="overflow-auto">
-            <table className="min-w-full border-separate border-spacing-0">
-              <thead>
-                <tr className="bg-slate-50 text-left text-xs font-semibold text-slate-600">
-                  <th className="px-4 py-3">Role</th>
-                  <th className="px-4 py-3">Company</th>
-                  <th className="px-4 py-3">Location</th>
-                  <th className="px-4 py-3">Mode</th>
-                  <th className="px-4 py-3">CTC</th>
-                  <th className="px-4 py-3">Deadline</th>
-                  <th className="px-4 py-3">Applicants</th>
-                  <th className="px-4 py-3">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredJobs.map((j) => (
-                  <tr key={j._id} className="border-t border-slate-100 hover:bg-slate-50/50">
-                    <td className="px-4 py-3 font-medium text-slate-900">
-                      {j.role}
-                    </td>
-                    <td className="px-4 py-3 text-slate-700">
-                      {j.companyProfile?.companyName || '—'}
-                    </td>
-                    <td className="px-4 py-3 text-slate-700">
-                      {j.location}
-                    </td>
-                    <td className="px-4 py-3">
-                      <Badge variant="neutral">{j.mode}</Badge>
-                    </td>
-                    <td className="px-4 py-3 text-slate-700">
-                      {formatMoney(j.ctc)}
-                    </td>
-                    <td className="px-4 py-3 text-slate-700">
-                      {formatDate(j.deadline)}
-                    </td>
-                    <td className="px-4 py-3 text-slate-700">
-                      {j.applicantsCount ?? 0}
-                    </td>
-                    <td className="px-4 py-3">
-                      <Link to={`/student/jobs/${j._id}`}>
-                        <Button type="button" variant="secondary">
-                          View Details
-                        </Button>
-                      </Link>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+        <div className="rounded-[30px] border border-red-200 bg-red-50 p-6 shadow-lg">
+          <div className="text-sm font-semibold text-red-700">
+            {error}
           </div>
-        </Card>
+        </div>
+      ) : filteredJobs.length === 0 ? (
+        <div className="rounded-[30px] border border-white/40 bg-white/70 p-10 shadow-xl backdrop-blur-xl">
+          <EmptyState
+            title="No jobs match your filters"
+            description="Try clearing filters or searching different roles."
+            action={
+              <Button
+                variant="secondary"
+                onClick={() => setRoleQuery('')}
+              >
+                Reset Filters
+              </Button>
+            }
+          />
+        </div>
+      ) : (
+        <div className="grid gap-6 xl:grid-cols-2">
+          
+          {filteredJobs.map((j) => (
+            <div
+              key={j._id}
+              className="group overflow-hidden rounded-[30px] border border-white/40 bg-white/70 p-7 shadow-xl backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl"
+            >
+              
+              {/* Top */}
+              <div className="flex items-start justify-between gap-4">
+                
+                <div>
+                  <h2 className="text-2xl font-bold text-slate-900">
+                    {j.role}
+                  </h2>
+
+                  <p className="mt-2 text-sm text-slate-500">
+                    {j.companyProfile?.companyName || '—'}
+                  </p>
+                </div>
+
+                <Badge
+                  variant="neutral"
+                  className="rounded-full px-4 py-1.5"
+                >
+                  {j.mode}
+                </Badge>
+              </div>
+
+              {/* Details */}
+              <div className="mt-8 grid gap-4 sm:grid-cols-2">
+                
+                <div className="rounded-2xl bg-slate-50 p-4">
+                  <div className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                    Location
+                  </div>
+
+                  <div className="mt-1 text-sm font-medium text-slate-900">
+                    {j.location || '—'}
+                  </div>
+                </div>
+
+                <div className="rounded-2xl bg-slate-50 p-4">
+                  <div className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                    Package
+                  </div>
+
+                  <div className="mt-1 text-sm font-medium text-slate-900">
+                    {formatMoney(j.ctc)}
+                  </div>
+                </div>
+
+                <div className="rounded-2xl bg-slate-50 p-4">
+                  <div className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                    Deadline
+                  </div>
+
+                  <div className="mt-1 text-sm font-medium text-slate-900">
+                    {formatDate(j.deadline)}
+                  </div>
+                </div>
+
+                <div className="rounded-2xl bg-slate-50 p-4">
+                  <div className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                    Applicants
+                  </div>
+
+                  <div className="mt-1 text-sm font-medium text-slate-900">
+                    {j.applicantsCount ?? 0}
+                  </div>
+                </div>
+              </div>
+
+              {/* Footer */}
+              <div className="mt-8 flex items-center justify-between">
+                
+                <div className="text-sm text-slate-500">
+                  Apply before deadline
+                </div>
+
+                <Link to={`/student/jobs/${j._id}`}>
+                  <Button
+                    type="button"
+                    className="rounded-2xl bg-gradient-to-r from-blue-600 to-cyan-500 px-5 py-3 text-white shadow-lg hover:from-blue-700 hover:to-cyan-600"
+                  >
+                    View Details
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          ))}
+        </div>
       )}
     </div>
-  )
+  </div>
+)
 }
 
 

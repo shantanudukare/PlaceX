@@ -203,298 +203,453 @@ export default function EditProfile() {
 
   const approvalStatus = user?.approvalStatus
 
-  return (
-    <div className="space-y-4">
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <h2 className="text-2xl font-semibold text-slate-900">
-            Edit Profile
-          </h2>
-          {approvalStatus && approvalStatus !== 'Approved' ? (
-            <div className="mt-2">
-              <Badge variant="warning">{approvalStatus}</Badge>
+ return (
+  <div className="relative">
+    
+    {/* Background Blur */}
+    <div className="pointer-events-none absolute inset-0 overflow-hidden">
+      <div className="absolute -top-10 left-0 h-72 w-72 rounded-full bg-blue-500/10 blur-3xl" />
+      <div className="absolute bottom-0 right-0 h-72 w-72 rounded-full bg-cyan-500/10 blur-3xl" />
+    </div>
+
+    <div className="relative z-10 space-y-8">
+
+      {/* HEADER */}
+      <div className="overflow-hidden rounded-[34px] bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 p-8 text-white shadow-2xl">
+        
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+          
+          <div>
+            <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-4 py-2 text-sm font-medium text-slate-200 backdrop-blur">
+              Edit Student Profile
             </div>
-          ) : null}
-        </div>
-        {photoUrl || resumeUrl ? (
-          <div className="text-sm text-slate-600">
-            Last updated:{' '}
-            {profile?.updatedAt ? formatDate(profile.updatedAt) : '—'}
+
+            <h1 className="mt-5 text-4xl font-bold">
+              Manage Your Profile
+            </h1>
+
+            <p className="mt-3 max-w-2xl text-base leading-7 text-slate-300">
+              Update your academic details, projects,
+              skills, resume and profile information.
+            </p>
           </div>
-        ) : null}
+
+          <div className="flex flex-col gap-3">
+            
+            {approvalStatus ? (
+              <div
+                className={`rounded-2xl border px-5 py-4 text-sm font-medium backdrop-blur ${
+                  approvalStatus === 'Approved'
+                    ? 'border-emerald-400/20 bg-emerald-400/10 text-emerald-200'
+                    : 'border-amber-400/20 bg-amber-400/10 text-amber-100'
+                }`}
+              >
+                <div className="text-xs uppercase tracking-wider opacity-80">
+                  Approval Status
+                </div>
+
+                <div className="mt-1 text-lg font-semibold">
+                  {approvalStatus}
+                </div>
+              </div>
+            ) : null}
+
+            {profile?.updatedAt ? (
+              <div className="rounded-2xl border border-white/10 bg-white/10 px-5 py-4 text-sm text-slate-300 backdrop-blur">
+                Last updated:{' '}
+                <span className="font-semibold text-white">
+                  {formatDate(profile.updatedAt)}
+                </span>
+              </div>
+            ) : null}
+          </div>
+        </div>
       </div>
 
+      {/* LOADING */}
       {loading ? (
         <div className="flex justify-center pt-10">
-          <Spinner size={24} />
+          <div className="flex h-20 w-20 items-center justify-center rounded-full bg-white shadow-xl">
+            <Spinner size={28} />
+          </div>
         </div>
       ) : error ? (
-        <Card className="p-5">
-          <div className="text-sm font-medium text-rose-700">{error}</div>
-        </Card>
+        <div className="rounded-[30px] border border-red-200 bg-red-50 p-6 shadow-lg">
+          <div className="text-sm font-semibold text-red-700">
+            {error}
+          </div>
+        </div>
       ) : (
-        <form className="grid gap-4 lg:grid-cols-3" onSubmit={onSave}>
-          <div className="lg:col-span-2 space-y-4">
-            <Card className="p-5">
-              <div className="grid gap-4 md:grid-cols-2">
+        <form
+          className="grid gap-8 xl:grid-cols-[1fr_340px]"
+          onSubmit={onSave}
+        >
+          
+          {/* LEFT SIDE */}
+          <div className="space-y-8">
+
+            {/* BASIC INFO */}
+            <div className="rounded-[30px] border border-white/40 bg-white/70 p-7 shadow-xl backdrop-blur-xl">
+              
+              <div className="mb-6">
+                <h2 className="text-2xl font-bold text-slate-900">
+                  Basic Information
+                </h2>
+
+                <p className="mt-2 text-sm text-slate-500">
+                  Update your academic and personal details
+                </p>
+              </div>
+
+              <div className="grid gap-5 md:grid-cols-2">
                 <Input
                   label="Full name"
                   id="fullName"
                   value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
+                  onChange={(e) =>
+                    setFullName(e.target.value)
+                  }
                   required
                 />
+
                 <Input
                   label="Branch"
                   id="branch"
                   value={branch}
-                  onChange={(e) => setBranch(e.target.value)}
+                  onChange={(e) =>
+                    setBranch(e.target.value)
+                  }
                   required
                 />
               </div>
 
-              <div className="mt-4 grid gap-4 md:grid-cols-2">
+              <div className="mt-5 grid gap-5 md:grid-cols-2">
                 <Input
                   label="CGPA (0-10)"
                   id="cgpa"
                   value={cgpa}
-                  onChange={(e) => setCgpa(e.target.value)}
+                  onChange={(e) =>
+                    setCgpa(e.target.value)
+                  }
                   required
                 />
+
                 <Input
-                  label="Phone (optional)"
+                  label="Phone"
                   id="phone"
                   value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                />
-              </div>
-
-              <div className="mt-4">
-                <Input
-                  label="Skills (comma-separated)"
-                  id="skills"
-                  value={skillsText}
-                  onChange={(e) => setSkillsText(e.target.value)}
-                  placeholder="React, Node, MongoDB"
+                  onChange={(e) =>
+                    setPhone(e.target.value)
+                  }
                 />
               </div>
 
               <div className="mt-5">
-                <div className="flex items-center justify-between gap-3">
-                  <div className="text-sm font-semibold text-slate-900">
-                    Projects
-                  </div>
-                  <button
-                    type="button"
-                    className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
-                    onClick={() =>
-                      setProjects((prev) => [
-                        ...prev,
-                        {
-                          title: '',
-                          description: '',
-                          techStack: '',
-                          githubLink: '',
-                          liveLink: '',
-                        },
-                      ])
-                    }
-                  >
-                    Add Project
-                  </button>
-                </div>
-
-                <div className="mt-4 space-y-4">
-                  {projects.map((p, idx) => (
-                    <div
-                      key={idx}
-                      className="rounded-2xl border border-slate-200 bg-slate-50 p-4"
-                    >
-                      <div className="flex items-start justify-between gap-3">
-                        <div className="text-sm font-semibold text-slate-900">
-                          Project #{idx + 1}
-                        </div>
-                        {projects.length > 1 ? (
-                          <button
-                            type="button"
-                            className="rounded-lg px-2 py-1 text-sm text-rose-700 hover:bg-rose-50"
-                            onClick={() =>
-                              setProjects((prev) =>
-                                prev.filter((_, i) => i !== idx)
-                              )
-                            }
-                          >
-                            Remove
-                          </button>
-                        ) : null}
-                      </div>
-
-                      <div className="mt-3 grid gap-4 md:grid-cols-2">
-                        <Input
-                          label="Title"
-                          id={`pr-title-${idx}`}
-                          value={p.title}
-                          onChange={(e) => {
-                            const v = e.target.value
-                            setProjects((prev) =>
-                              prev.map((x, i) =>
-                                i === idx ? { ...x, title: v } : x
-                              )
-                            )
-                          }}
-                        />
-                        <Input
-                          label="Tech Stack (comma)"
-                          id={`pr-tech-${idx}`}
-                          value={p.techStack}
-                          onChange={(e) => {
-                            const v = e.target.value
-                            setProjects((prev) =>
-                              prev.map((x, i) =>
-                                i === idx ? { ...x, techStack: v } : x
-                              )
-                            )
-                          }}
-                        />
-                      </div>
-
-                      <div className="mt-3">
-                        <Textarea
-                          label="Description"
-                          id={`pr-desc-${idx}`}
-                          value={p.description}
-                          onChange={(e) => {
-                            const v = e.target.value
-                            setProjects((prev) =>
-                              prev.map((x, i) =>
-                                i === idx ? { ...x, description: v } : x
-                              )
-                            )
-                          }}
-                        />
-                      </div>
-
-                      <div className="mt-3 grid gap-4 md:grid-cols-2">
-                        <Input
-                          label="GitHub link"
-                          id={`pr-gh-${idx}`}
-                          value={p.githubLink}
-                          onChange={(e) => {
-                            const v = e.target.value
-                            setProjects((prev) =>
-                              prev.map((x, i) =>
-                                i === idx
-                                  ? { ...x, githubLink: v }
-                                  : x
-                              )
-                            )
-                          }}
-                        />
-                        <Input
-                          label="Live link"
-                          id={`pr-live-${idx}`}
-                          value={p.liveLink}
-                          onChange={(e) => {
-                            const v = e.target.value
-                            setProjects((prev) =>
-                              prev.map((x, i) =>
-                                i === idx
-                                  ? { ...x, liveLink: v }
-                                  : x
-                              )
-                            )
-                          }}
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                <Input
+                  label="Skills (comma-separated)"
+                  id="skills"
+                  value={skillsText}
+                  onChange={(e) =>
+                    setSkillsText(e.target.value)
+                  }
+                  placeholder="React, Node, MongoDB"
+                />
               </div>
-            </Card>
-
-            <div className="flex flex-wrap items-center justify-end gap-3">
-              <Button type="submit" loading={saving} disabled={saving}>
-                Save Changes
-              </Button>
             </div>
 
-            {error ? <div className="text-sm text-rose-600">{error}</div> : null}
+            {/* PROJECTS */}
+            <div className="rounded-[30px] border border-white/40 bg-white/70 p-7 shadow-xl backdrop-blur-xl">
+              
+              <div className="flex flex-wrap items-center justify-between gap-4">
+                
+                <div>
+                  <h2 className="text-2xl font-bold text-slate-900">
+                    Projects
+                  </h2>
+
+                  <p className="mt-2 text-sm text-slate-500">
+                    Showcase your best work and projects
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  className="rounded-2xl bg-gradient-to-r from-blue-600 to-cyan-500 px-5 py-3 text-sm font-semibold text-white shadow-lg transition hover:from-blue-700 hover:to-cyan-600"
+                  onClick={() =>
+                    setProjects((prev) => [
+                      ...prev,
+                      {
+                        title: '',
+                        description: '',
+                        techStack: '',
+                        githubLink: '',
+                        liveLink: '',
+                      },
+                    ])
+                  }
+                >
+                  Add Project
+                </button>
+              </div>
+
+              <div className="mt-8 space-y-6">
+                {projects.map((p, idx) => (
+                  <div
+                    key={idx}
+                    className="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm"
+                  >
+                    
+                    <div className="flex items-center justify-between">
+                      
+                      <h3 className="text-lg font-semibold text-slate-900">
+                        Project #{idx + 1}
+                      </h3>
+
+                      {projects.length > 1 ? (
+                        <button
+                          type="button"
+                          className="rounded-xl bg-red-50 px-3 py-2 text-sm font-medium text-red-600 transition hover:bg-red-100"
+                          onClick={() =>
+                            setProjects((prev) =>
+                              prev.filter(
+                                (_, i) => i !== idx
+                              )
+                            )
+                          }
+                        >
+                          Remove
+                        </button>
+                      ) : null}
+                    </div>
+
+                    <div className="mt-5 grid gap-5 md:grid-cols-2">
+                      
+                      <Input
+                        label="Title"
+                        id={`pr-title-${idx}`}
+                        value={p.title}
+                        onChange={(e) => {
+                          const v = e.target.value
+
+                          setProjects((prev) =>
+                            prev.map((x, i) =>
+                              i === idx
+                                ? { ...x, title: v }
+                                : x
+                            )
+                          )
+                        }}
+                      />
+
+                      <Input
+                        label="Tech Stack"
+                        id={`pr-tech-${idx}`}
+                        value={p.techStack}
+                        onChange={(e) => {
+                          const v = e.target.value
+
+                          setProjects((prev) =>
+                            prev.map((x, i) =>
+                              i === idx
+                                ? {
+                                    ...x,
+                                    techStack: v,
+                                  }
+                                : x
+                            )
+                          )
+                        }}
+                      />
+                    </div>
+
+                    <div className="mt-5">
+                      <Textarea
+                        label="Description"
+                        id={`pr-desc-${idx}`}
+                        value={p.description}
+                        onChange={(e) => {
+                          const v = e.target.value
+
+                          setProjects((prev) =>
+                            prev.map((x, i) =>
+                              i === idx
+                                ? {
+                                    ...x,
+                                    description: v,
+                                  }
+                                : x
+                            )
+                          )
+                        }}
+                      />
+                    </div>
+
+                    <div className="mt-5 grid gap-5 md:grid-cols-2">
+                      
+                      <Input
+                        label="GitHub Link"
+                        id={`pr-gh-${idx}`}
+                        value={p.githubLink}
+                        onChange={(e) => {
+                          const v = e.target.value
+
+                          setProjects((prev) =>
+                            prev.map((x, i) =>
+                              i === idx
+                                ? {
+                                    ...x,
+                                    githubLink: v,
+                                  }
+                                : x
+                            )
+                          )
+                        }}
+                      />
+
+                      <Input
+                        label="Live Link"
+                        id={`pr-live-${idx}`}
+                        value={p.liveLink}
+                        onChange={(e) => {
+                          const v = e.target.value
+
+                          setProjects((prev) =>
+                            prev.map((x, i) =>
+                              i === idx
+                                ? {
+                                    ...x,
+                                    liveLink: v,
+                                  }
+                                : x
+                            )
+                          )
+                        }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* SAVE BUTTON */}
+              <div className="mt-8 flex justify-end">
+                <Button
+                  type="submit"
+                  loading={saving}
+                  disabled={saving}
+                  className="rounded-2xl bg-gradient-to-r from-blue-600 to-cyan-500 px-7 py-3 text-white shadow-lg hover:from-blue-700 hover:to-cyan-600"
+                >
+                  Save Changes
+                </Button>
+              </div>
+
+              {error ? (
+                <div className="mt-4 text-sm text-red-600">
+                  {error}
+                </div>
+              ) : null}
+            </div>
           </div>
 
-          {/* Uploads */}
-          <div className="space-y-4">
-            <Card className="p-5">
-              <div className="text-sm font-semibold text-slate-900">
-                Upload Photo
-              </div>
-              <div className="mt-3">
-                <div className="h-24 w-24 overflow-hidden rounded-2xl border border-slate-200 bg-slate-50">
+          {/* RIGHT SIDE */}
+          <div className="space-y-6">
+            
+            {/* PHOTO */}
+<div className="rounded-[30px] border border-white/40 bg-white/70 p-7 shadow-xl backdrop-blur-xl">              
+              <h2 className="text-2xl font-bold text-slate-900">
+                Profile Photo
+              </h2>
+
+              <p className="mt-2 text-sm text-slate-500">
+                Upload your professional profile picture
+              </p>
+
+              <div className="mt-8 flex justify-center">
+                
+                <div className="h-36 w-36 overflow-hidden rounded-full border-4 border-white bg-slate-100 shadow-xl">
                   {photoUrl ? (
-                    // eslint-disable-next-line jsx-a11y/alt-text
                     <img
                       src={photoUrl}
+                      alt="Profile"
                       className="h-full w-full object-cover"
                     />
                   ) : (
-                    <div className="flex h-full items-center justify-center text-xs text-slate-400">
-                      No photo
+                    <div className="flex h-full items-center justify-center text-sm text-slate-400">
+                      No Photo
                     </div>
                   )}
                 </div>
               </div>
 
-              <div className="mt-4">
+              <div className="mt-8">
                 <input
                   type="file"
                   accept="image/*"
-                  onChange={(e) => onUploadPhoto(e.target.files?.[0])}
+                  onChange={(e) =>
+                    onUploadPhoto(
+                      e.target.files?.[0]
+                    )
+                  }
                   disabled={photoUploading}
-                  className="w-full text-sm"
+                  className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm"
                 />
-                <div className="mt-2 text-xs text-slate-600">
-                  Upload will update your student photo.
-                </div>
-              </div>
-            </Card>
 
-            <Card className="p-5">
-              <div className="text-sm font-semibold text-slate-900">
-                Upload Resume (PDF)
+                <p className="mt-2 text-xs text-slate-500">
+                  JPG, PNG supported
+                </p>
               </div>
-              <div className="mt-3">
+            </div>
+
+            {/* RESUME */}
+            <div className="rounded-[30px] border border-white/40 bg-white/70 p-7 shadow-xl backdrop-blur-xl">
+              
+              <h2 className="text-2xl font-bold text-slate-900">
+                Resume
+              </h2>
+
+              <p className="mt-2 text-sm text-slate-500">
+                Upload your updated resume in PDF format
+              </p>
+
+              <div className="mt-6">
                 {resumeUrl ? (
                   <a
                     href={resumeUrl}
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-900 hover:bg-slate-50"
+                    className="inline-flex items-center rounded-2xl border border-blue-100 bg-blue-50 px-5 py-3 text-sm font-semibold text-blue-700 transition hover:bg-blue-100"
                   >
-                    View current resume
+                    View Current Resume
                   </a>
                 ) : (
-                  <div className="text-sm text-slate-600">
+                  <div className="rounded-2xl bg-slate-100 p-4 text-sm text-slate-500">
                     Resume not uploaded yet.
                   </div>
                 )}
               </div>
 
-              <div className="mt-4">
+              <div className="mt-6">
                 <input
                   type="file"
                   accept="application/pdf"
-                  onChange={(e) => onUploadResume(e.target.files?.[0])}
+                  onChange={(e) =>
+                    onUploadResume(
+                      e.target.files?.[0]
+                    )
+                  }
                   disabled={resumeUploading}
-                  className="w-full text-sm"
+                  className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm"
                 />
-                <div className="mt-2 text-xs text-slate-600">
-                  Only PDF files are allowed.
-                </div>
+
+                <p className="mt-2 text-xs text-slate-500">
+                  Only PDF files are allowed
+                </p>
               </div>
-            </Card>
+            </div>
           </div>
         </form>
       )}
     </div>
-  )
+  </div>
+)
 }
 
