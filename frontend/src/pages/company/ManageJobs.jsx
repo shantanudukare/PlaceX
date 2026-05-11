@@ -81,147 +81,252 @@ export default function CompanyManageJobs() {
   }
 
   return (
-    <div className="space-y-4">
-      <div className="flex flex-wrap items-start justify-between gap-3">
+  <div className="relative">
+
+    {/* Background Blur */}
+    <div className="pointer-events-none absolute inset-0 overflow-hidden">
+      <div className="absolute -top-20 left-0 h-72 w-72 rounded-full bg-blue-500/10 blur-3xl" />
+
+      <div className="absolute bottom-0 right-0 h-72 w-72 rounded-full bg-cyan-500/10 blur-3xl" />
+    </div>
+
+    <div className="relative z-10 space-y-6">
+
+      {/* Header */}
+      <div className="flex flex-wrap items-start justify-between gap-4">
+
         <div>
-          <h2 className="text-2xl font-semibold text-slate-900">My Jobs</h2>
-          <p className="mt-1 text-sm text-slate-600">
-            Manage your job postings and their approvals.
+          <h2 className="bg-gradient-to-r from-slate-900 via-blue-900 to-cyan-600 bg-clip-text text-3xl font-bold text-transparent">
+            My Jobs
+          </h2>
+
+          <p className="mt-2 text-sm text-slate-600">
+            Manage your job postings and monitor hiring activity.
           </p>
         </div>
 
-        <div className="flex gap-2">
-          <Link to="/company/jobs/new">
-            <Button type="button">Post Job</Button>
-          </Link>
-        </div>
+        <Link to="/company/jobs/new">
+          <button className="rounded-2xl bg-gradient-to-r from-blue-600 to-cyan-500 px-6 py-3 text-sm font-semibold text-white shadow-xl transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl">
+            + Post Job
+          </button>
+        </Link>
       </div>
 
-      <Card className="p-5">
-        <div className="grid gap-4 md:grid-cols-3">
+      {/* Filters */}
+      <div className="rounded-[32px] border border-white/40 bg-white/70 p-6 shadow-2xl backdrop-blur-xl">
+
+        <div className="grid gap-5 md:grid-cols-3">
+
+          {/* Search */}
           <div>
-            <label className="mb-1 block text-sm font-medium text-slate-900">
-              Search role
+            <label className="mb-2 block text-sm font-semibold text-slate-700">
+              Search Role
             </label>
+
             <input
               value={roleQuery}
-              onChange={(e) => setRoleQuery(e.target.value)}
-              placeholder="e.g. Frontend Developer"
-              className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-100"
+              onChange={(e) =>
+                setRoleQuery(e.target.value)
+              }
+              placeholder="Frontend Developer"
+              className="w-full rounded-2xl border border-slate-200 bg-white/80 px-4 py-3 text-sm shadow-sm transition-all focus:border-cyan-400 focus:outline-none focus:ring-4 focus:ring-cyan-100"
             />
           </div>
+
+          {/* Status */}
           <div className="md:col-span-2">
-            <label className="mb-1 block text-sm font-medium text-slate-900">
-              Approval status
+            <label className="mb-2 block text-sm font-semibold text-slate-700">
+              Approval Status
             </label>
+
             <select
               value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-100"
+              onChange={(e) =>
+                setStatusFilter(
+                  e.target.value
+                )
+              }
+              className="w-full rounded-2xl border border-slate-200 bg-white/80 px-4 py-3 text-sm shadow-sm transition-all focus:border-cyan-400 focus:outline-none focus:ring-4 focus:ring-cyan-100"
             >
-              <option value="All">All</option>
-              <option value="Pending">Pending</option>
-              <option value="Approved">Approved</option>
-              <option value="Rejected">Rejected</option>
+              <option value="All">
+                All
+              </option>
+
+              <option value="Pending">
+                Pending
+              </option>
+
+              <option value="Approved">
+                Approved
+              </option>
+
+              <option value="Rejected">
+                Rejected
+              </option>
             </select>
           </div>
         </div>
-      </Card>
+      </div>
 
+      {/* Loading */}
       {loading ? (
-        <div className="flex justify-center pt-10">
-          <Spinner size={24} />
+        <div className="flex justify-center pt-16">
+          <div className="flex h-20 w-20 items-center justify-center rounded-full border border-white/40 bg-white/70 shadow-xl backdrop-blur-xl">
+            <Spinner size={28} />
+          </div>
         </div>
       ) : error ? (
-        <Card className="p-5">
-          <div className="text-sm font-medium text-rose-700">{error}</div>
-        </Card>
-      ) : filteredJobs.length === 0 ? (
-        <EmptyState
-          title="No jobs found"
-          description="Try changing filters or post a new job."
-          action={
-            <Link to="/company/jobs/new">
-              <Button type="button">Post Job</Button>
-            </Link>
-          }
-        />
-      ) : (
-        <Card className="p-0">
-          <div className="overflow-auto">
-            <table className="min-w-full border-separate border-spacing-0">
-              <thead>
-                <tr className="bg-slate-50 text-left text-xs font-semibold text-slate-600">
-                  <th className="px-4 py-3">Role</th>
-                  <th className="px-4 py-3">Location</th>
-                  <th className="px-4 py-3">Mode</th>
-                  <th className="px-4 py-3">CTC</th>
-                  <th className="px-4 py-3">Deadline</th>
-                  <th className="px-4 py-3">Status</th>
-                  <th className="px-4 py-3">Applicants</th>
-                  <th className="px-4 py-3">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredJobs.map((j) => (
-                  <tr
-                    key={j._id}
-                    className="border-t border-slate-100 hover:bg-slate-50/50"
-                  >
-                    <td className="px-4 py-3 font-medium text-slate-900">
-                      {j.role}
-                    </td>
-                    <td className="px-4 py-3 text-slate-700">{j.location}</td>
-                    <td className="px-4 py-3">
-                      <Badge variant="neutral">{j.mode}</Badge>
-                    </td>
-                    <td className="px-4 py-3 text-slate-700">
-                      {formatMoney(j.ctc)}
-                    </td>
-                    <td className="px-4 py-3 text-slate-700">
-                      {formatDate(j.deadline)}
-                    </td>
-                    <td className="px-4 py-3">
-                      <Badge variant={approvalBadgeVariant(j.approvalStatus)}>
-                        {j.approvalStatus}
-                      </Badge>
-                    </td>
-                    <td className="px-4 py-3 text-slate-700">
-                      {j.applicantsCount ?? 0}
-                    </td>
-                    <td className="px-4 py-3">
-                      <div className="flex flex-wrap gap-2">
-                        <Link to={`/company/jobs/${j._id}`}>
-                          <Button type="button" variant="secondary">
-                            Edit
-                          </Button>
-                        </Link>
-                        <Link to={`/company/jobs/${j._id}/applicants`}>
-                          <Button type="button" variant="secondary">
-                            Applicants
-                          </Button>
-                        </Link>
-                        <Button
-                          type="button"
-                          variant="danger"
-                          className="px-3"
-                          onClick={() => {
-                            setJobToDelete(j)
-                            setDeleteOpen(true)
-                          }}
-                        >
-                          Delete
-                        </Button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+        <Card className="rounded-[28px] border border-rose-200 bg-rose-50/80 p-6 shadow-lg backdrop-blur-xl">
+          <div className="text-sm font-semibold text-rose-700">
+            {error}
           </div>
         </Card>
+      ) : filteredJobs.length === 0 ? (
+        <div className="rounded-[32px] border border-white/40 bg-white/70 p-10 text-center shadow-2xl backdrop-blur-xl">
+
+          <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-r from-blue-600 to-cyan-500 text-3xl text-white shadow-xl">
+            💼
+          </div>
+
+          <h3 className="mt-6 text-2xl font-bold text-slate-900">
+            No Jobs Found
+          </h3>
+
+          <p className="mt-2 text-sm text-slate-600">
+            Try changing filters or create a new job posting.
+          </p>
+
+          <div className="mt-6">
+            <Link to="/company/jobs/new">
+              <button className="rounded-2xl bg-gradient-to-r from-blue-600 to-cyan-500 px-6 py-3 text-sm font-semibold text-white shadow-xl transition-all hover:scale-[1.02]">
+                Post Job
+              </button>
+            </Link>
+          </div>
+        </div>
+      ) : (
+
+        /* Job Cards */
+        <div className="grid gap-6 xl:grid-cols-2">
+
+          {filteredJobs.map((j) => (
+            <div
+              key={j._id}
+              className="group relative overflow-hidden rounded-[32px] border border-white/40 bg-white/70 p-7 shadow-2xl backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-cyan-100"
+            >
+
+              {/* Gradient Blur */}
+              <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-cyan-400/10 blur-3xl transition-all duration-500 group-hover:bg-cyan-400/20" />
+
+              <div className="relative z-10">
+
+                {/* Top */}
+                <div className="flex items-start justify-between gap-4">
+
+                  <div>
+                    <h3 className="text-2xl font-bold text-slate-900">
+                      {j.role}
+                    </h3>
+
+                    <p className="mt-1 text-sm text-slate-500">
+                      {j.location}
+                    </p>
+                  </div>
+
+                  <div>
+                    <Badge
+                      variant={approvalBadgeVariant(
+                        j.approvalStatus
+                      )}
+                    >
+                      {j.approvalStatus}
+                    </Badge>
+                  </div>
+                </div>
+
+                {/* Info Grid */}
+                <div className="mt-6 grid gap-4 sm:grid-cols-2">
+
+                  <div className="rounded-2xl bg-slate-50 p-4">
+                    <div className="text-xs font-medium text-slate-500">
+                      Job Mode
+                    </div>
+
+                    <div className="mt-1 text-sm font-semibold text-slate-900">
+                      {j.mode}
+                    </div>
+                  </div>
+
+                  <div className="rounded-2xl bg-slate-50 p-4">
+                    <div className="text-xs font-medium text-slate-500">
+                      Salary Package
+                    </div>
+
+                    <div className="mt-1 text-sm font-semibold text-slate-900">
+                      {formatMoney(j.ctc)}
+                    </div>
+                  </div>
+
+                  <div className="rounded-2xl bg-slate-50 p-4">
+                    <div className="text-xs font-medium text-slate-500">
+                      Deadline
+                    </div>
+
+                    <div className="mt-1 text-sm font-semibold text-slate-900">
+                      {formatDate(
+                        j.deadline
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="rounded-2xl bg-slate-50 p-4">
+                    <div className="text-xs font-medium text-slate-500">
+                      Applicants
+                    </div>
+
+                    <div className="mt-1 text-sm font-semibold text-slate-900">
+                      {j.applicantsCount ??
+                        0}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Buttons */}
+                <div className="mt-7 flex flex-wrap gap-3">
+
+                  <Link
+                    to={`/company/jobs/${j._id}`}
+                  >
+                    <button className="rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition-all hover:border-cyan-400 hover:text-cyan-700">
+                      Edit Job
+                    </button>
+                  </Link>
+
+                  <Link
+                    to={`/company/jobs/${j._id}/applicants`}
+                  >
+                    <button className="rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition-all hover:border-cyan-400 hover:text-cyan-700">
+                      Applicants
+                    </button>
+                  </Link>
+
+                  <button
+                    onClick={() => {
+                      setJobToDelete(j)
+                      setDeleteOpen(true)
+                    }}
+                    className="rounded-2xl bg-red-500 px-5 py-3 text-sm font-semibold text-white shadow-lg transition-all hover:bg-red-600"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       )}
 
+      {/* Delete Modal */}
       <Modal
         isOpen={deleteOpen}
         title="Delete Job"
@@ -233,32 +338,36 @@ export default function CompanyManageJobs() {
         }}
         footer={
           <div className="flex items-center justify-end gap-3">
-            <Button
+            <button
               type="button"
-              variant="secondary"
               disabled={deleting}
-              onClick={() => setDeleteOpen(false)}
+              onClick={() =>
+                setDeleteOpen(false)
+              }
+              className="rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700"
             >
               Cancel
-            </Button>
-            <Button
+            </button>
+
+            <button
               type="button"
-              variant="danger"
-              loading={deleting}
               disabled={deleting}
               onClick={onDeleteConfirmed}
+              className="rounded-2xl bg-red-500 px-5 py-3 text-sm font-semibold text-white shadow-lg hover:bg-red-600"
             >
-              Confirm Delete
-            </Button>
+              {deleting
+                ? 'Deleting...'
+                : 'Confirm Delete'}
+            </button>
           </div>
         }
       >
-        <div className="text-sm text-slate-700">
-          This will permanently remove the job posting. Applicants will no
-          longer be visible for this job.
+        <div className="text-sm leading-6 text-slate-700">
+          This action will permanently remove the job posting and all associated applicant data.
         </div>
       </Modal>
     </div>
-  )
+  </div>
+)
 }
 

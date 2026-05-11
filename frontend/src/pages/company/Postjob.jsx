@@ -166,179 +166,443 @@ export default function CompanyPostJob() {
   }
 
   return (
-    <div className="space-y-4">
-      <div className="flex flex-wrap items-start justify-between gap-3">
+  <div className="relative">
+
+    {/* Background Blur */}
+    <div className="pointer-events-none absolute inset-0 overflow-hidden">
+      <div className="absolute -top-20 left-0 h-72 w-72 rounded-full bg-blue-500/10 blur-3xl" />
+
+      <div className="absolute bottom-0 right-0 h-72 w-72 rounded-full bg-cyan-500/10 blur-3xl" />
+    </div>
+
+    <div className="relative z-10 space-y-6">
+
+      {/* Header */}
+      <div className="flex flex-wrap items-start justify-between gap-4">
+
         <div>
-          <h2 className="text-2xl font-semibold text-slate-900">
-            {isEdit ? 'Edit Job' : 'Post a Job'}
+          <h2 className="bg-gradient-to-r from-slate-900 via-blue-900 to-cyan-600 bg-clip-text text-3xl font-bold text-transparent">
+            {isEdit ? 'Edit Job' : 'Create New Job'}
           </h2>
-          <p className="mt-1 text-sm text-slate-600">
+
+          <p className="mt-2 text-sm text-slate-600">
             {isEdit
-              ? 'Changes will be sent for admin approval again.'
-              : 'Create a job posting for admin approval.'}
+              ? 'Update your job posting details.'
+              : 'Create a professional job listing for students.'}
           </p>
         </div>
-        <div className="flex gap-2">
-          <Link to="/company/jobs">
-            <Button type="button" variant="secondary">
-              Back to Jobs
-            </Button>
-          </Link>
-        </div>
+
+        <Link to="/company/jobs">
+          <button className="rounded-2xl border border-slate-200 bg-white/80 px-5 py-3 text-sm font-semibold text-slate-700 shadow-lg backdrop-blur-xl transition-all hover:border-cyan-400 hover:text-cyan-700">
+            ← Back to Jobs
+          </button>
+        </Link>
       </div>
 
+      {/* Loading */}
       {loading ? (
-        <div className="flex justify-center pt-10">
-          <Spinner size={24} />
+        <div className="flex justify-center pt-16">
+          <div className="flex h-20 w-20 items-center justify-center rounded-full border border-white/40 bg-white/70 shadow-xl backdrop-blur-xl">
+            <Spinner size={28} />
+          </div>
         </div>
       ) : (
-        <Card className="p-5">
-          <form onSubmit={onSubmit} className="space-y-4">
-            {error ? (
-              <div className="rounded-xl border border-rose-200 bg-rose-50 p-3 text-sm text-rose-800">
-                {error}
-              </div>
-            ) : null}
+        <form
+          onSubmit={onSubmit}
+          className="grid gap-6 lg:grid-cols-3"
+        >
 
-            <div className="grid gap-4 md:grid-cols-2">
-              <Input
-                label="Job Role"
-                id="role"
-                value={role}
-                onChange={(e) => setRole(e.target.value)}
-                placeholder="e.g. Software Engineer"
-                required
-              />
-              <Input
-                label="CTC (required)"
-                id="ctc"
-                value={ctc}
-                onChange={(e) => setCtc(e.target.value)}
-                placeholder="e.g. 800000"
-                required
-              />
-            </div>
+          {/* LEFT SECTION */}
+          <div className="space-y-6 lg:col-span-2">
 
-            <Textarea
-              label="Job Description"
-              id="description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="Describe responsibilities and requirements..."
-            />
+            {/* Main Form */}
+            <div className="rounded-[32px] border border-white/40 bg-white/70 p-7 shadow-2xl backdrop-blur-xl">
 
-            <div className="grid gap-4 md:grid-cols-2">
-              <Input
-                label="Location"
-                id="location"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                placeholder="e.g. Bangalore"
-                required
-              />
-              <Input
-                label="Minimum CGPA"
-                id="minCgpa"
-                value={minCgpa}
-                onChange={(e) => setMinCgpa(e.target.value)}
-                placeholder="e.g. 7.5"
-                required
-              />
-            </div>
+              <div className="mb-7 flex items-center gap-3">
 
-            <div className="grid gap-4 md:grid-cols-3">
-              <Select
-                label="Mode"
-                id="mode"
-                value={mode}
-                onChange={(e) => setMode(e.target.value)}
-                options={MODES.map((m) => ({ value: m, label: m }))}
-              />
-              <Input
-                label="Openings"
-                id="openings"
-                value={openings}
-                onChange={(e) => setOpenings(e.target.value)}
-                placeholder="e.g. 3"
-              />
-              <div className="flex items-end">
-                <label className="flex w-full cursor-pointer items-center justify-between rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm shadow-sm">
-                  <span className="text-slate-800 font-medium">Active</span>
-                  <input
-                    type="checkbox"
-                    checked={isActive}
-                    onChange={(e) => setIsActive(e.target.checked)}
-                  />
-                </label>
-              </div>
-            </div>
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-r from-blue-600 to-cyan-500 text-white shadow-lg">
+                  💼
+                </div>
 
-            <div className="grid gap-4 md:grid-cols-2">
-              <Input
-                label="Allowed Branches (comma-separated)"
-                id="branches"
-                value={allowedBranchesText}
-                onChange={(e) => setAllowedBranchesText(e.target.value)}
-                placeholder="e.g. CSE, IT"
-                required
-              />
-              <Input
-                label="Skills Required (comma-separated, optional)"
-                id="skills"
-                value={skillsRequiredText}
-                onChange={(e) => setSkillsRequiredText(e.target.value)}
-                placeholder="e.g. React, Node, MongoDB"
-              />
-            </div>
-
-            <div className="grid gap-4 md:grid-cols-2">
-              <Input
-                label="Deadline"
-                id="deadline"
-                type="date"
-                value={deadline}
-                onChange={(e) => setDeadline(e.target.value)}
-                required
-              />
-              <div className="flex items-end">
                 <div>
-                  <div className="text-xs font-medium text-slate-600">
-                    Preview
-                  </div>
-                  <div className="mt-2 flex flex-wrap gap-2">
-                    <Badge variant="neutral">{mode}</Badge>
-                    {allowedBranches.length ? (
-                      <Badge variant="info">{allowedBranches.length} branches</Badge>
-                    ) : null}
-                    {skillsRequired.length ? (
-                      <Badge variant="neutral">{skillsRequired.length} skills</Badge>
-                    ) : null}
+                  <h3 className="text-xl font-bold text-slate-900">
+                    Job Information
+                  </h3>
+
+                  <p className="text-sm text-slate-500">
+                    Fill out all required hiring details.
+                  </p>
+                </div>
+              </div>
+
+              {error ? (
+                <div className="mb-6 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-medium text-rose-700">
+                  {error}
+                </div>
+              ) : null}
+
+              {/* Role + CTC */}
+              <div className="grid gap-5 md:grid-cols-2">
+
+                <div>
+                  <label className="mb-2 block text-sm font-semibold text-slate-700">
+                    Job Role
+                  </label>
+
+                  <Input
+                    id="role"
+                    value={role}
+                    onChange={(e) =>
+                      setRole(e.target.value)
+                    }
+                    placeholder="Software Engineer"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="mb-2 block text-sm font-semibold text-slate-700">
+                    CTC
+                  </label>
+
+                  <Input
+                    id="ctc"
+                    value={ctc}
+                    onChange={(e) =>
+                      setCtc(e.target.value)
+                    }
+                    placeholder="800000"
+                    required
+                  />
+                </div>
+              </div>
+
+              {/* Description */}
+              <div className="mt-5">
+
+                <label className="mb-2 block text-sm font-semibold text-slate-700">
+                  Job Description
+                </label>
+
+                <Textarea
+                  id="description"
+                  value={description}
+                  onChange={(e) =>
+                    setDescription(
+                      e.target.value
+                    )
+                  }
+                  placeholder="Describe job responsibilities and requirements..."
+                />
+              </div>
+
+              {/* Location + CGPA */}
+              <div className="mt-5 grid gap-5 md:grid-cols-2">
+
+                <div>
+                  <label className="mb-2 block text-sm font-semibold text-slate-700">
+                    Location
+                  </label>
+
+                  <Input
+                    id="location"
+                    value={location}
+                    onChange={(e) =>
+                      setLocation(e.target.value)
+                    }
+                    placeholder="Bangalore"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="mb-2 block text-sm font-semibold text-slate-700">
+                    Minimum CGPA
+                  </label>
+
+                  <Input
+                    id="minCgpa"
+                    value={minCgpa}
+                    onChange={(e) =>
+                      setMinCgpa(
+                        e.target.value
+                      )
+                    }
+                    placeholder="7.5"
+                    required
+                  />
+                </div>
+              </div>
+
+              {/* Mode + Openings */}
+              <div className="mt-5 grid gap-5 md:grid-cols-3">
+
+                <div>
+                  <label className="mb-2 block text-sm font-semibold text-slate-700">
+                    Work Mode
+                  </label>
+
+                  <Select
+                    id="mode"
+                    value={mode}
+                    onChange={(e) =>
+                      setMode(e.target.value)
+                    }
+                    options={MODES.map(
+                      (m) => ({
+                        value: m,
+                        label: m,
+                      })
+                    )}
+                  />
+                </div>
+
+                <div>
+                  <label className="mb-2 block text-sm font-semibold text-slate-700">
+                    Openings
+                  </label>
+
+                  <Input
+                    id="openings"
+                    value={openings}
+                    onChange={(e) =>
+                      setOpenings(
+                        e.target.value
+                      )
+                    }
+                    placeholder="3"
+                  />
+                </div>
+
+                {/* Active Toggle */}
+                <div className="flex items-end">
+                  <div className="w-full rounded-2xl border border-slate-200 bg-slate-50 p-4">
+
+                    <div className="flex items-center justify-between">
+
+                      <div>
+                        <div className="text-sm font-semibold text-slate-900">
+                          Active Job
+                        </div>
+
+                        <div className="text-xs text-slate-500">
+                          Enable visibility
+                        </div>
+                      </div>
+
+                      <input
+                        type="checkbox"
+                        checked={isActive}
+                        onChange={(e) =>
+                          setIsActive(
+                            e.target.checked
+                          )
+                        }
+                        className="h-5 w-5 accent-cyan-500"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
+
+              {/* Branches + Skills */}
+              <div className="mt-5 grid gap-5 md:grid-cols-2">
+
+                <div>
+                  <label className="mb-2 block text-sm font-semibold text-slate-700">
+                    Allowed Branches
+                  </label>
+
+                  <Input
+                    id="branches"
+                    value={
+                      allowedBranchesText
+                    }
+                    onChange={(e) =>
+                      setAllowedBranchesText(
+                        e.target.value
+                      )
+                    }
+                    placeholder="CSE, IT, AIDS"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="mb-2 block text-sm font-semibold text-slate-700">
+                    Skills Required
+                  </label>
+
+                  <Input
+                    id="skills"
+                    value={
+                      skillsRequiredText
+                    }
+                    onChange={(e) =>
+                      setSkillsRequiredText(
+                        e.target.value
+                      )
+                    }
+                    placeholder="React, Node.js"
+                  />
+                </div>
+              </div>
+
+              {/* Deadline */}
+              <div className="mt-5">
+
+                <label className="mb-2 block text-sm font-semibold text-slate-700">
+                  Application Deadline
+                </label>
+
+                <Input
+                  id="deadline"
+                  type="date"
+                  value={deadline}
+                  onChange={(e) =>
+                    setDeadline(
+                      e.target.value
+                    )
+                  }
+                  required
+                />
+              </div>
             </div>
 
-            <div className="flex flex-wrap items-center justify-end gap-3">
-              <Button
+            {/* Buttons */}
+            <div className="flex flex-wrap items-center justify-end gap-4">
+
+              <button
                 type="button"
-                variant="secondary"
                 disabled={saving}
-                onClick={() => navigate('/company/jobs')}
+                onClick={() =>
+                  navigate('/company/jobs')
+                }
+                className="rounded-2xl border border-slate-200 bg-white/80 px-6 py-3 text-sm font-semibold text-slate-700 shadow-lg backdrop-blur-xl transition-all hover:border-slate-300"
               >
                 Cancel
-              </Button>
-              <Button type="submit" loading={saving} disabled={saving}>
-                {isEdit ? 'Save Changes' : 'Create Job'}
-              </Button>
-            </div>
+              </button>
 
-            <div className="text-xs text-slate-500">
-              Admin approval required before students can apply.
+              <button
+                type="submit"
+                disabled={saving}
+                className="rounded-2xl bg-gradient-to-r from-blue-600 to-cyan-500 px-7 py-3 text-sm font-semibold text-white shadow-xl transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl disabled:opacity-70"
+              >
+                {saving
+                  ? isEdit
+                    ? 'Saving Changes...'
+                    : 'Creating Job...'
+                  : isEdit
+                  ? 'Save Changes'
+                  : 'Create Job'}
+              </button>
             </div>
-          </form>
-        </Card>
+          </div>
+
+          {/* RIGHT SECTION */}
+          <div className="space-y-6">
+
+            {/* Preview Card */}
+            <div className="overflow-hidden rounded-[32px] border border-white/40 bg-white/70 shadow-2xl backdrop-blur-xl">
+
+              {/* Top Gradient */}
+              <div className="h-28 bg-gradient-to-r from-slate-900 via-blue-950 to-cyan-600" />
+
+              <div className="relative px-6 pb-6">
+
+                {/* Icon */}
+                <div className="-mt-12 flex justify-center">
+                  <div className="flex h-24 w-24 items-center justify-center rounded-3xl border-4 border-white bg-white text-4xl shadow-xl">
+                    🚀
+                  </div>
+                </div>
+
+                {/* Title */}
+                <div className="mt-5 text-center">
+
+                  <h3 className="text-2xl font-bold text-slate-900">
+                    {role || 'Job Role'}
+                  </h3>
+
+                  <p className="mt-1 text-sm text-slate-500">
+                    {location ||
+                      'Location'}
+                  </p>
+                </div>
+
+                {/* Preview Stats */}
+                <div className="mt-7 space-y-4">
+
+                  <div className="rounded-2xl bg-slate-50 p-4">
+                    <div className="text-xs font-medium text-slate-500">
+                      Work Mode
+                    </div>
+
+                    <div className="mt-1 text-sm font-semibold text-slate-900">
+                      {mode}
+                    </div>
+                  </div>
+
+                  <div className="rounded-2xl bg-slate-50 p-4">
+                    <div className="text-xs font-medium text-slate-500">
+                      Salary Package
+                    </div>
+
+                    <div className="mt-1 text-sm font-semibold text-slate-900">
+                      {ctc
+                        ? `₹ ${ctc}`
+                        : 'Not specified'}
+                    </div>
+                  </div>
+
+                  <div className="rounded-2xl bg-slate-50 p-4">
+                    <div className="text-xs font-medium text-slate-500">
+                      Minimum CGPA
+                    </div>
+
+                    <div className="mt-1 text-sm font-semibold text-slate-900">
+                      {minCgpa || '—'}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Badges */}
+                <div className="mt-6 flex flex-wrap gap-2">
+
+                  <Badge variant="neutral">
+                    {mode}
+                  </Badge>
+
+                  {allowedBranches.length ? (
+                    <Badge variant="info">
+                      {
+                        allowedBranches.length
+                      }{' '}
+                      Branches
+                    </Badge>
+                  ) : null}
+
+                  {skillsRequired.length ? (
+                    <Badge variant="neutral">
+                      {
+                        skillsRequired.length
+                      }{' '}
+                      Skills
+                    </Badge>
+                  ) : null}
+                </div>
+
+                {/* Footer */}
+                <div className="mt-6 rounded-2xl bg-blue-50 px-4 py-3 text-xs font-medium text-blue-700">
+                  Admin approval required before students can apply.
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
       )}
     </div>
-  )
+  </div>
+)
 }
 

@@ -9,7 +9,11 @@ import Spinner from '../../components/ui/Spinner.jsx'
 import { useAuth } from '../../context/AuthContext.jsx'
 import { useToast } from '../../context/ToastContext.jsx'
 import { formatDate } from '../../utils/format.js'
-
+import {
+  Building2,
+  UploadCloud,
+  Users,
+} from 'lucide-react'
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'
 
@@ -142,157 +146,350 @@ export default function CompanyEditProfile() {
   const approvalStatus = user?.approvalStatus
 
   return (
-    <div className="space-y-4">
-      <div className="flex flex-wrap items-start justify-between gap-3">
+  <div className="relative">
+
+    {/* Background Blur */}
+    <div className="pointer-events-none absolute inset-0 overflow-hidden">
+      <div className="absolute -top-20 left-0 h-72 w-72 rounded-full bg-blue-500/10 blur-3xl" />
+
+      <div className="absolute bottom-0 right-0 h-72 w-72 rounded-full bg-cyan-500/10 blur-3xl" />
+    </div>
+
+    <div className="relative z-10 space-y-6">
+
+      {/* Header */}
+      <div className="flex flex-wrap items-start justify-between gap-4">
+
         <div>
-          <h2 className="text-2xl font-semibold text-slate-900">
-            Edit Profile
+          <h2 className="bg-gradient-to-r from-slate-900 via-blue-900 to-cyan-600 bg-clip-text text-3xl font-bold text-transparent">
+            Edit Company Profile
           </h2>
-          {approvalStatus && approvalStatus !== 'Approved' ? (
-            <div className="mt-2">
-              <Badge variant="warning">{approvalStatus}</Badge>
+
+          <p className="mt-2 text-sm text-slate-600">
+            Update your company information and hiring details.
+          </p>
+
+          {approvalStatus &&
+          approvalStatus !== 'Approved' ? (
+            <div className="mt-4 inline-flex rounded-full bg-amber-400/20 px-4 py-2 text-xs font-semibold text-amber-700 backdrop-blur-xl">
+              {approvalStatus}
             </div>
           ) : null}
         </div>
+
         {profile?.updatedAt ? (
-          <div className="text-sm text-slate-600">
-            Last updated: {formatDate(profile.updatedAt)}
+          <div className="rounded-2xl border border-white/40 bg-white/70 px-5 py-3 text-sm font-medium text-slate-600 shadow-lg backdrop-blur-xl">
+            Last updated:{' '}
+            <span className="font-semibold text-slate-900">
+              {formatDate(profile.updatedAt)}
+            </span>
           </div>
         ) : null}
       </div>
 
+      {/* Loading */}
       {loading ? (
-        <div className="flex justify-center pt-10">
-          <Spinner size={24} />
+        <div className="flex justify-center pt-16">
+          <div className="flex h-20 w-20 items-center justify-center rounded-full border border-white/40 bg-white/70 shadow-xl backdrop-blur-xl">
+            <Spinner size={28} />
+          </div>
         </div>
       ) : error ? (
-        <Card className="p-5">
-          <div className="text-sm font-medium text-rose-700">{error}</div>
+        <Card className="rounded-[28px] border border-rose-200 bg-rose-50/80 p-6 shadow-lg backdrop-blur-xl">
+          <div className="text-sm font-semibold text-rose-700">
+            {error}
+          </div>
         </Card>
       ) : (
-        <form onSubmit={onSave} className="grid gap-4 lg:grid-cols-3">
-          <div className="lg:col-span-2 space-y-4">
-            <Card className="p-5">
-              <div className="grid gap-4 md:grid-cols-2">
-                <Input
-                  label="Full name"
-                  id="fullName"
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                  required
-                />
-                <Input
-                  label="Company name"
-                  id="companyName"
-                  value={companyName}
-                  onChange={(e) => setCompanyName(e.target.value)}
-                  required
-                />
+        <form
+          onSubmit={onSave}
+          className="grid gap-6 lg:grid-cols-3"
+        >
+
+          {/* LEFT SIDE */}
+          <div className="space-y-6 lg:col-span-2">
+
+            {/* Company Info */}
+            <div className="rounded-[32px] border border-white/40 bg-white/70 p-7 shadow-2xl backdrop-blur-xl">
+
+              <div className="mb-6 flex items-center gap-3">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-r from-blue-600 to-cyan-500 text-white shadow-lg">
+                  <Building2 size={22} />
+                </div>
+
+                <div>
+                  <h3 className="text-xl font-bold text-slate-900">
+                    Company Information
+                  </h3>
+
+                  <p className="text-sm text-slate-500">
+                    Basic company details and branding.
+                  </p>
+                </div>
               </div>
 
-              <div className="mt-4 grid gap-4 md:grid-cols-2">
-                <Input
-                  label="Website (optional)"
-                  id="website"
-                  value={website}
-                  onChange={(e) => setWebsite(e.target.value)}
-                />
-                <Input
-                  label="Industry (optional)"
-                  id="industry"
-                  value={industry}
-                  onChange={(e) => setIndustry(e.target.value)}
-                />
+              <div className="grid gap-5 md:grid-cols-2">
+
+                <div>
+                  <label className="mb-2 block text-sm font-semibold text-slate-700">
+                    Full Name
+                  </label>
+
+                  <Input
+                    id="fullName"
+                    value={fullName}
+                    onChange={(e) =>
+                      setFullName(e.target.value)
+                    }
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="mb-2 block text-sm font-semibold text-slate-700">
+                    Company Name
+                  </label>
+
+                  <Input
+                    id="companyName"
+                    value={companyName}
+                    onChange={(e) =>
+                      setCompanyName(
+                        e.target.value
+                      )
+                    }
+                    required
+                  />
+                </div>
               </div>
 
-              <div className="mt-4 grid gap-4 md:grid-cols-2">
+              <div className="mt-5 grid gap-5 md:grid-cols-2">
+
+                <div>
+                  <label className="mb-2 block text-sm font-semibold text-slate-700">
+                    Website
+                  </label>
+
+                  <Input
+                    id="website"
+                    value={website}
+                    onChange={(e) =>
+                      setWebsite(e.target.value)
+                    }
+                  />
+                </div>
+
+                <div>
+                  <label className="mb-2 block text-sm font-semibold text-slate-700">
+                    Industry
+                  </label>
+
+                  <Input
+                    id="industry"
+                    value={industry}
+                    onChange={(e) =>
+                      setIndustry(e.target.value)
+                    }
+                  />
+                </div>
+              </div>
+
+              <div className="mt-5">
+
+                <label className="mb-2 block text-sm font-semibold text-slate-700">
+                  Location
+                </label>
+
                 <Input
-                  label="Location (optional)"
                   id="location"
                   value={location}
-                  onChange={(e) => setLocation(e.target.value)}
+                  onChange={(e) =>
+                    setLocation(e.target.value)
+                  }
                 />
-                <div />
               </div>
 
-              <div className="mt-4">
+              <div className="mt-5">
+
+                <label className="mb-2 block text-sm font-semibold text-slate-700">
+                  Description
+                </label>
+
                 <Textarea
-                  label="Description (optional)"
                   id="description"
                   value={description}
-                  onChange={(e) => setDescription(e.target.value)}
+                  onChange={(e) =>
+                    setDescription(
+                      e.target.value
+                    )
+                  }
                 />
               </div>
+            </div>
 
-              <div className="mt-5 grid gap-4 md:grid-cols-2">
-                <Input
-                  label="HR Name (optional)"
-                  id="hrName"
-                  value={hrName}
-                  onChange={(e) => setHrName(e.target.value)}
-                />
-                <Input
-                  label="HR Email (optional)"
-                  id="hrEmail"
-                  type="email"
-                  value={hrEmail}
-                  onChange={(e) => setHrEmail(e.target.value)}
-                />
+            {/* HR Section */}
+            <div className="rounded-[32px] border border-white/40 bg-white/70 p-7 shadow-2xl backdrop-blur-xl">
+
+              <div className="mb-6 flex items-center gap-3">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-r from-slate-900 to-blue-900 text-white shadow-lg">
+                  <Users size={22} />
+                </div>
+
+                <div>
+                  <h3 className="text-xl font-bold text-slate-900">
+                    HR Contact Details
+                  </h3>
+
+                  <p className="text-sm text-slate-500">
+                    Recruitment contact information.
+                  </p>
+                </div>
               </div>
 
-              <div className="mt-4">
+              <div className="grid gap-5 md:grid-cols-2">
+
+                <div>
+                  <label className="mb-2 block text-sm font-semibold text-slate-700">
+                    HR Name
+                  </label>
+
+                  <Input
+                    id="hrName"
+                    value={hrName}
+                    onChange={(e) =>
+                      setHrName(e.target.value)
+                    }
+                  />
+                </div>
+
+                <div>
+                  <label className="mb-2 block text-sm font-semibold text-slate-700">
+                    HR Email
+                  </label>
+
+                  <Input
+                    id="hrEmail"
+                    type="email"
+                    value={hrEmail}
+                    onChange={(e) =>
+                      setHrEmail(e.target.value)
+                    }
+                  />
+                </div>
+              </div>
+
+              <div className="mt-5">
+                <label className="mb-2 block text-sm font-semibold text-slate-700">
+                  HR Phone
+                </label>
+
                 <Input
-                  label="HR Phone (optional)"
                   id="hrPhone"
                   value={hrPhone}
-                  onChange={(e) => setHrPhone(e.target.value)}
+                  onChange={(e) =>
+                    setHrPhone(e.target.value)
+                  }
                 />
               </div>
-            </Card>
+            </div>
 
-            <div className="flex flex-wrap items-center justify-end gap-3">
-              <Button type="submit" loading={saving} disabled={saving}>
-                Save Changes
-              </Button>
+            {/* Save Button */}
+            <div className="flex justify-end">
+              <button
+                type="submit"
+                disabled={saving}
+                className="rounded-2xl bg-gradient-to-r from-blue-600 to-cyan-500 px-7 py-3 text-sm font-semibold text-white shadow-xl transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl disabled:opacity-70"
+              >
+                {saving
+                  ? 'Saving Changes...'
+                  : 'Save Changes'}
+              </button>
             </div>
           </div>
 
-          <div className="space-y-4">
-            <Card className="p-5">
-              <div className="text-sm font-semibold text-slate-900">Logo</div>
-              <div className="mt-3">
-                <div className="h-24 w-24 overflow-hidden rounded-2xl border border-slate-200 bg-slate-50">
-                  {logoUrl ? (
-                    // eslint-disable-next-line jsx-a11y/alt-text
-                    <img
-                      src={logoUrl}
-                      className="h-full w-full object-cover"
-                    />
-                  ) : (
-                    <div className="flex h-full items-center justify-center text-xs text-slate-400">
-                      No Logo
-                    </div>
-                  )}
-                </div>
-              </div>
+          {/* RIGHT SIDE */}
+          <div className="space-y-6">
 
-              <div className="mt-4">
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => onUploadLogo(e.target.files?.[0])}
-                  disabled={logoUploading}
-                  className="w-full text-sm"
-                />
-                <div className="mt-2 text-xs text-slate-600">
-                  Upload will update your company logo.
+            {/* Logo Upload */}
+            <div className="overflow-hidden rounded-[32px] border border-white/40 bg-white/70 shadow-2xl backdrop-blur-xl">
+
+              {/* Top Gradient */}
+              <div className="h-28 bg-gradient-to-r from-slate-900 via-blue-950 to-cyan-600" />
+
+              <div className="relative px-6 pb-6">
+
+                {/* Logo */}
+                <div className="-mt-12 flex justify-center">
+                  <div className="h-28 w-28 overflow-hidden rounded-3xl border-4 border-white bg-white shadow-xl">
+
+                    {logoUrl ? (
+                      <img
+                        src={logoUrl}
+                        alt="Company Logo"
+                        className="h-full w-full object-cover"
+                      />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center bg-slate-100 text-slate-400">
+                        <Building2 size={34} />
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Company Name */}
+                <div className="mt-5 text-center">
+                  <h3 className="text-2xl font-bold text-slate-900">
+                    {companyName || 'Company'}
+                  </h3>
+
+                  <p className="mt-1 text-sm text-slate-500">
+                    Upload your company branding
+                  </p>
+                </div>
+
+                {/* Upload */}
+                <div className="mt-6">
+                  <label className="flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50 px-6 py-8 text-center transition-all hover:border-cyan-400 hover:bg-cyan-50">
+
+                    <UploadCloud
+                      size={32}
+                      className="text-cyan-600"
+                    />
+
+                    <span className="mt-3 text-sm font-semibold text-slate-700">
+                      Click to upload logo
+                    </span>
+
+                    <span className="mt-1 text-xs text-slate-500">
+                      PNG, JPG or SVG supported
+                    </span>
+
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) =>
+                        onUploadLogo(
+                          e.target.files?.[0]
+                        )
+                      }
+                      disabled={logoUploading}
+                      className="hidden"
+                    />
+                  </label>
+
+                  {logoUploading ? (
+                    <div className="mt-4 flex justify-center">
+                      <Spinner size={22} />
+                    </div>
+                  ) : null}
                 </div>
               </div>
-            </Card>
+            </div>
           </div>
         </form>
       )}
     </div>
-  )
+  </div>
+)
 }
 
