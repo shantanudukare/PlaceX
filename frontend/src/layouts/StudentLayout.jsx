@@ -78,8 +78,7 @@ export default function StudentLayout({ children }) {
         {/* SIDEBAR */}
         <aside className="col-span-12 hidden lg:col-span-3 lg:block p-5">
           
-          <div className="sticky top-5 flex h-[calc(100vh-40px)] flex-col overflow-hidden rounded-[32px] bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 p-6 text-white shadow-2xl">
-
+<div className="sticky top-5 flex h-[calc(100vh-40px)] flex-col overflow-y-auto rounded-[32px] bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 p-6 text-white shadow-2xl">
             {/* Blur Effects */}
             <div className="absolute top-0 left-0 h-72 w-72 rounded-full bg-cyan-500/10 blur-3xl" />
             <div className="absolute bottom-0 right-0 h-72 w-72 rounded-full bg-blue-500/10 blur-3xl" />

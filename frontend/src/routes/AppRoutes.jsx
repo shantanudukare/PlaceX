@@ -121,7 +121,7 @@ export default function AppRoutes() {
         }
       />
       <Route
-        path="/student/jobs/:id"
+        path="/student/jobs/:jobId"
         element={
           <RoleGuard allowedRoles="student">
             <StudentLayout>

@@ -41,7 +41,7 @@ export default function StudentJobDetails() {
         setError('')
         const [jobRes, appsRes] = await Promise.all([
           http.get(`/api/jobs/${jobId}`),
-          http.get('/api/students/my-applications'),
+          http.get('/api/applications/student')
         ])
 
         if (!mounted) return

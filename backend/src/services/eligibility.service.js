@@ -53,12 +53,30 @@ export const checkStudentEligibilityForJob = async ({
   }
 
   // 5. Branch must be allowed
-  if (!job.allowedBranches.includes(studentProfile.branch)) {
-    return {
-      isEligible: false,
-      reason: `Your branch (${studentProfile.branch}) is not eligible for this job`,
-    };
-  }
+// 5. Branch eligibility check
+
+const allowedBranches =
+  job.allowedBranches?.map((b) =>
+    b.trim().toLowerCase()
+  ) || []
+
+const studentBranch =
+  studentProfile.branch?.trim().toLowerCase()
+
+// If "all" exists, every branch is eligible
+const allBranchesAllowed =
+  allowedBranches.includes("all")
+
+// Otherwise check specific branch
+if (
+  !allBranchesAllowed &&
+  !allowedBranches.includes(studentBranch)
+) {
+  return {
+    isEligible: false,
+    reason: `Your branch (${studentProfile.branch}) is not eligible for this job`,
+  };
+}
 
   // 6. Already applied check
   const existingApplication = await Application.findOne({

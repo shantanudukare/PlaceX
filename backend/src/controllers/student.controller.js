@@ -131,12 +131,9 @@ export const getEligibleJobsForStudent = asyncHandler(async (req, res) => {
   const now = new Date();
 
   const jobs = await Job.find({
-    approvalStatus: APPROVAL_STATUS.APPROVED,
-    isActive: true,
-    deadline: { $gte: now },
-    minCgpa: { $lte: profile.cgpa },
-    allowedBranches: { $in: [profile.branch] },
-  })
+  approvalStatus: APPROVAL_STATUS.APPROVED,
+  isActive: true,
+})
     .populate("company", "fullName email")
     .populate("companyProfile", "companyName logo location")
     .sort({ createdAt: -1 });
