@@ -52,7 +52,12 @@ export const applyToJob = asyncHandler(async (req, res) => {
     relatedApplication: application._id,
   });
 
-  successResponse(res, "Job application submitted successfully", application, 201);
+  successResponse(
+    res,
+    "Job application submitted successfully",
+    application,
+    201
+  );
 });
 
 /**
@@ -88,14 +93,25 @@ export const updateApplicationStatus = asyncHandler(async (req, res) => {
   // Prevent selecting already placed student
   if (
     status === APPLICATION_STATUS.SELECTED &&
-    application.studentProfile.isPlaced
+    application.studentProfile.isPlaced &&
+    application.status !== APPLICATION_STATUS.SELECTED
   ) {
     res.status(400);
     throw new Error("Student is already selected for another job");
   }
 
+  // Store previous status
+  const previousStatus = application.status;
+
+  // Get student profile
+  const studentProfile = await StudentProfile.findById(
+    application.studentProfile._id
+  );
+
+  // Update status
   application.status = status;
 
+  // Handle timestamps
   if (status === APPLICATION_STATUS.SHORTLISTED) {
     application.shortlistedAt = new Date();
   }
@@ -108,15 +124,30 @@ export const updateApplicationStatus = asyncHandler(async (req, res) => {
     application.selectedAt = new Date();
 
     // Mark student as placed
-    const studentProfile = await StudentProfile.findById(
-      application.studentProfile._id
-    );
-
     studentProfile.isPlaced = true;
     studentProfile.selectedJob = application.job._id;
-    await studentProfile.save();
   }
 
+  // If previously selected but changed to another status
+  if (
+    previousStatus === APPLICATION_STATUS.SELECTED &&
+    status !== APPLICATION_STATUS.SELECTED
+  ) {
+    // Check if student is still selected in another company/job
+    const stillSelected = await Application.findOne({
+      studentProfile: studentProfile._id,
+      status: APPLICATION_STATUS.SELECTED,
+      _id: { $ne: application._id },
+    });
+
+    // Only remove placement if no other selected application exists
+    if (!stillSelected) {
+      studentProfile.isPlaced = false;
+      studentProfile.selectedJob = null;
+    }
+  }
+
+  await studentProfile.save();
   await application.save();
 
   // Notify student
@@ -129,7 +160,11 @@ export const updateApplicationStatus = asyncHandler(async (req, res) => {
     relatedApplication: application._id,
   });
 
-  successResponse(res, "Application status updated successfully", application);
+  successResponse(
+    res,
+    "Application status updated successfully",
+    application
+  );
 });
 
 /**
@@ -148,7 +183,11 @@ export const getStudentApplications = asyncHandler(async (req, res) => {
     })
     .sort({ createdAt: -1 });
 
-  successResponse(res, "Student applications fetched successfully", applications);
+  successResponse(
+    res,
+    "Student applications fetched successfully",
+    applications
+  );
 });
 
 /**
@@ -157,11 +196,17 @@ export const getStudentApplications = asyncHandler(async (req, res) => {
  * @access  Private (Company)
  */
 export const getCompanyApplications = asyncHandler(async (req, res) => {
-  const applications = await Application.find({ company: req.user._id })
+  const applications = await Application.find({
+    company: req.user._id,
+  })
     .populate("student", "fullName email")
     .populate("studentProfile", "branch cgpa skills resume")
     .populate("job", "role ctc")
     .sort({ createdAt: -1 });
 
-  successResponse(res, "Company applications fetched successfully", applications);
+  successResponse(
+    res,
+    "Company applications fetched successfully",
+    applications
+  );
 });
